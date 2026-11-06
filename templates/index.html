@@ -1144,8 +1144,10 @@
       let data = null;
       // Try the real backend first (local dev). On static hosts (GitHub Pages)
       // the backend is unavailable, so fall back to client-side storage.
+      const API_BASE = (location.hostname.indexOf('github.io') !== -1)
+        ? 'https://reflected-items-sophisticated-officially.trycloudflare.com' : '';
       try {
-        const res = await fetch('/api/apply', {
+        const res = await fetch(API_BASE + '/api/apply', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(payload)

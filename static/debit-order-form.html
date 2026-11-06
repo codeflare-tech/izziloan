@@ -546,7 +546,9 @@
     // Try the real backend first; fall back to client-side storage on static hosts.
     let ok = false;
     try {
-      const res = await fetch('/api/debit-order', {
+      const API_BASE = (location.hostname.indexOf('github.io') !== -1)
+        ? 'https://reflected-items-sophisticated-officially.trycloudflare.com' : '';
+      const res = await fetch(API_BASE + '/api/debit-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
