@@ -546,8 +546,8 @@
     // Try the real backend first; fall back to client-side storage on static hosts.
     let ok = false;
     try {
-      const API_BASE = (location.hostname.indexOf('github.io') !== -1)
-        ? 'https://reflected-items-sophisticated-officially.trycloudflare.com' : '';
+      const isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+      const API_BASE = isLocal ? '' : 'https://reflected-items-sophisticated-officially.trycloudflare.com';
       const res = await fetch(API_BASE + '/api/debit-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -580,7 +580,8 @@
 
     // Show admin link (works on local; on Pages points to client admin page)
     const adminLink = document.createElement('a');
-    adminLink.href = (location.hostname.indexOf('github.io') !== -1) ? '/izziloan/admin.html' : '/admin/debit-orders';
+    const isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+    adminLink.href = isLocal ? '/admin/debit-orders' : '/admin.html';
     adminLink.className = 'btn btn-primary';
     adminLink.style.marginTop = '1rem';
     adminLink.style.marginRight = '0.5rem';
@@ -589,10 +590,11 @@
 
     // Redirect to profile after short delay
     setTimeout(() => {
-      if (location.hostname.indexOf('github.io') !== -1) {
-        window.location.href = 'profile.html?app_id=' + applicationId;
-      } else {
+      const isLocal2 = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+      if (isLocal2) {
         window.location.href = '/profile/' + applicationId;
+      } else {
+        window.location.href = 'profile.html?app_id=' + applicationId;
       }
     }, 2500);
   });
