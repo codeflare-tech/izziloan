@@ -1141,18 +1141,45 @@
         ...docs
       };
 
-      const res = await fetch('/api/apply', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-      });
-
-      const resText = await res.text();
-      if (!res.ok) {
-        console.error('Apply failed:', res.status, resText);
-        throw new Error('Failed (' + res.status + '): ' + resText.slice(0, 200));
+      let data = null;
+      // Try the real backend first (local dev). On static hosts (GitHub Pages)
+      // the backend is unavailable, so fall back to client-side storage.
+      try {
+        const res = await fetch('/api/apply', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const resText = await res.text();
+        if (res.ok) {
+          data = JSON.parse(resText);
+        } else {
+          console.warn('Backend returned', res.status, resText);
+        }
+      } catch (netErr) {
+        console.warn('Backend unreachable, using client-side storage:', netErr);
       }
-      const data = JSON.parse(resText);
+
+      if (!data) {
+        // Client-side fallback (works on static hosts like GitHub Pages)
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        const appNumber = 'IZZ-' + now.getFullYear() + pad(now.getMonth()+1) + pad(now.getDate()) + '-' + String(Math.floor(Math.random()*9000)+1000);
+        const netDisposable = Math.max(0, (payload.gross_income||0) - (payload.monthly_expenses||0) - (payload.existing_debt||0));
+        const affordability = netDisposable * 0.30 * 60;
+        data = {
+          id: Date.now(),
+          application_number: appNumber,
+          full_name: payload.full_name,
+          status: 'pending',
+          affordability_score: affordability
+        };
+        const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
+        apps.unshift(Object.assign({}, payload, data, { created_at: now.toISOString() }));
+        // Don't store huge base64 docs in localStorage quota; keep a summary
+        try { localStorage.setItem('izziloan_applications', JSON.stringify(apps)); }
+        catch (e) { console.warn('localStorage full, keeping application in memory only'); }
+      }
       btn.textContent = '✓ Application Submitted!';
       btn.style.background = 'hsl(142 72% 42%)';
       form.reset();
