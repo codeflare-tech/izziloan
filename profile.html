@@ -3,43 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>izziloan — Application Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>My Application — izziloan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--primary:#1e3a5f;--accent:#d4a017;--bg:#f3f4f6;--card:#fff;--border:#e5e7eb;--muted:#6b7280}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;background:var(--bg);color:#111827;padding:1.5rem}
-  .wrap{max-width:760px;margin:0 auto}
-  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-  h1{font-size:1.5rem;font-weight:700}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;margin-bottom:1rem}
-  .row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.9rem;gap:1rem}
-  .row:last-child{border-bottom:none}
-  .label{color:var(--muted);font-weight:500;flex-shrink:0}
-  .value{font-weight:600;text-align:right;word-break:break-word}
-  .status{padding:.2rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600}
-  .status.pending{background:#fef3c7;color:#92400e}
-  .status.approved{background:#d1fae5;color:#065f46}
-  .status.declined{background:#fee2e2;color:#991b1b}
-  .empty{text-align:center;padding:3rem;color:var(--muted)}
-  .back{display:inline-block;margin-bottom:1rem;color:var(--primary);font-weight:600;text-decoration:none}
-  .note{background:#fef9c3;border:1px solid #fde047;border-radius:.5rem;padding:.75rem;margin-bottom:1rem;font-size:.8rem;color:#713f12}
-  .section-title{font-size:1.1rem;font-weight:700;margin:1.5rem 0 .75rem}
-  .debit{border:1px solid var(--border);border-radius:.5rem;padding:.75rem;margin-bottom:.5rem}
-  .debit .row{border-bottom:none;padding:.3rem 0}
-  .spinner{display:inline-block;width:1.2rem;height:1.2rem;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-right:.5rem;vertical-align:middle}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  :root {
+    --primary: 220 65% 33%;
+    --primary-light: 220 55% 45%;
+    --accent: 45 62% 53%;
+    --bg: 220 20% 96%;
+    --fg: 220 65% 15%;
+    --muted: 220 20% 45%;
+    --border: 220 20% 88%;
+    --card: 0 0% 100%;
+    --radius: 0.75rem;
+    --shadow-card: 0 1px 2px hsl(220 20% 20% / .04), 0 6px 16px hsl(220 20% 20% / .06);
+    --shadow-sm: 0 1px 2px hsl(220 20% 20% / .05);
+    --transition-smooth: all .2s ease;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: hsl(var(--bg)); color: hsl(var(--fg)); min-height: 100vh; }
+
+  .navbar {
+    position: sticky; top: 0; z-index: 50;
+    background: hsl(0 0% 100% / .85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .navbar-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; height: 4.5rem;
+  }
+  .logo { font-size: 1.25rem; font-weight: 700; color: hsl(var(--primary)); text-decoration: none; letter-spacing: -.01em; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: hsl(var(--muted)); text-decoration: none; font-size: .9375rem; font-weight: 500; transition: var(--transition-smooth); }
+  .nav-links a:hover { color: hsl(var(--primary)); }
+
+  .profile-header {
+    background: linear-gradient(180deg, hsl(220 65% 33%), hsl(220 75% 25%));
+    color: #fff;
+    padding: 5rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 0%, hsl(45 62% 53% / .18), transparent 40%),
+                radial-gradient(circle at 80% 100%, hsl(220 55% 45% / .18), transparent 40%);
+    pointer-events: none;
+  }
+  .profile-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: .5rem;
+    letter-spacing: -.02em;
+    position: relative;
+  }
+  .app-number {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: hsl(0 0% 100% / .15);
+    padding: .4rem .9rem;
+    border-radius: 9999px;
+    font-size: .875rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: .5rem;
+    position: relative;
+    backdrop-filter: blur(4px);
+    border: 1px solid hsl(0 0% 100% / .2);
+  }
+  .subtitle {
+    opacity: .85;
+    font-size: 1rem;
+    margin-top: .75rem;
+    position: relative;
+  }
+
+  .container { max-width: 56rem; margin: 0 auto; padding: 0 1rem; }
+  .section { margin-top: 2.5rem; }
+  .section-title {
+    font-size: .6875rem; font-weight: 700; color: hsl(var(--muted));
+    text-transform: uppercase; letter-spacing: .12em;
+    margin-bottom: .75rem;
+  }
+  .card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+  .status-cell {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .status-label { font-size: .8125rem; color: hsl(var(--muted)); font-weight: 500; margin-bottom: .25rem; }
+  .status-value { font-size: 1.0625rem; font-weight: 700; color: hsl(var(--fg)); }
+  .status-value.accent { color: hsl(var(--accent)); }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: 0;
+  }
+  .detail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .75rem 0; border-bottom: 1px solid hsl(var(--border)); gap: 1rem;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: hsl(var(--muted)); font-weight: 500; flex-shrink: 0; font-size: .9375rem; }
+  .detail-value { font-weight: 600; color: hsl(var(--fg)); text-align: right; word-break: break-word; font-size: .9375rem; }
+  .detail-value.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .02em; }
+  .detail-value.highlight { color: hsl(var(--accent)); font-size: 1.0625rem; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    font-size: .875rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .pill-pending { background: hsl(45 62% 53% / .12); color: hsl(35 80% 25%); }
+  .pill-under_review { background: hsl(220 65% 33% / .12); color: hsl(220 65% 33%); }
+  .pill-approved { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .pill-declined { background: hsl(0 84% 60% / .12); color: hsl(0 84% 60%); }
+  .pill-withdrawn { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+
+  .doc-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .85rem 0; border-bottom: 1px solid hsl(var(--border)); gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-name { font-weight: 500; flex: 1; font-size: .9375rem; min-width: 12rem; }
+  .doc-status {
+    font-size: .8125rem; font-weight: 700;
+    padding: .35rem .875rem; border-radius: 9999px;
+  }
+  .doc-uploaded { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .doc-missing { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+  .btn-upload {
+    padding: .45rem .875rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); color: hsl(var(--primary));
+    font-size: .8125rem; font-weight: 600; cursor: pointer; transition: var(--transition-smooth);
+  }
+  .btn-upload:hover { background: hsl(var(--bg)); }
+
+  .loading { text-align: center; padding: 3rem; color: hsl(var(--muted)); }
+  .error-banner {
+    background: hsl(0 84% 60% / .1);
+    border: 1px solid hsl(0 84% 60% / .3);
+    color: hsl(0 84% 60%);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+  }
+  .empty-state { text-align: center; padding: 2rem; color: hsl(var(--muted)); font-size: .9375rem; }
+  .trust-bar {
+    margin-top: 3rem; padding: 1.25rem;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center; gap: .75rem;
+    color: hsl(var(--muted)); font-size: .875rem;
+  }
+  .trust-bar svg { width: 18px; height: 18px; opacity: .7; }
+
+  .back-link {
+    display: inline-block; margin-bottom: 1.5rem;
+    color: hsl(var(--primary)); font-weight: 600; text-decoration: none;
+    transition: var(--transition-smooth);
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .spinner {
+    display: inline-block; width: 1.2rem; height: 1.2rem;
+    border: 2px solid hsl(var(--border)); border-top-color: hsl(var(--primary));
+    border-radius: 50%; animation: spin 1s linear infinite; margin-right: .5rem; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 640px) {
+    .profile-header { padding: 3.5rem 1rem 2.5rem; }
+    .card { padding: 1.25rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: .875rem; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <a class="back" href="index.html">← Back to Home</a>
-  <div class="top">
-    <h1>Application Profile</h1>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo">izziloan</a>
+    <div class="nav-links">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#apply">Apply</a>
+      <a href="profile-lookup.html">Track</a>
+    </div>
   </div>
-  <div class="note">Live view — data loaded from the izziloan backend.</div>
-  <div id="content" class="empty"><span class="spinner"></span>Loading your profile…</div>
+</nav>
+
+<div class="profile-header">
+  <h1>My Application</h1>
+  <div class="app-number" id="appNumber">Loading…</div>
+  <div class="subtitle">Track your loan application status and manage your documents</div>
 </div>
+
+<div class="container">
+  <a href="profile-lookup.html" class="back-link">← Back to Lookup</a>
+  <div id="profileContent">
+    <div class="loading"><span class="spinner"></span>Loading your application details…</div>
+  </div>
+</div>
+
 <script>
   const isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
   const API_BASE = isLocal ? '' : 'https://chest-suggest-offered-psychological.trycloudflare.com';
@@ -47,98 +234,219 @@
   const params = new URLSearchParams(location.search);
   const appId = params.get('app_id') || params.get('application_id') || params.get('id');
 
-  const content = document.getElementById('content');
+  function statusClass(status) { return 'pill-' + (status || 'pending'); }
+  function statusLabel(status) {
+    const map = { pending: 'Pending', under_review: 'Under Review', approved: 'Approved', declined: 'Declined', withdrawn: 'Withdrawn' };
+    return map[status] || (status || 'Pending');
+  }
+  function escapeHtml(v) {
+    return String(v === null || v === undefined ? '—' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
-  function esc(v){ return String(v === null || v === undefined ? '—' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  async function load() {
+  async function loadProfile() {
     if (!appId) {
-      content.innerHTML = '<div class="empty">No application ID provided. <a href="index.html">Start an application</a>.</div>';
+      document.getElementById('profileContent').innerHTML = `
+        <div class="error-banner">
+          No application ID provided. <a href="index.html">Start an application</a>.
+        </div>`;
       return;
     }
     try {
       const res = await fetch(API_BASE + '/api/profile/' + encodeURIComponent(appId));
       if (!res.ok) {
-        // Fallback: try localStorage (client-side submissions)
         const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
         const app = apps.find(a => String(a.id) === String(appId) || String(a.application_number) === String(appId));
         if (app) { renderLocal(app); return; }
-        content.innerHTML = '<div class="empty">Application not found. <a href="index.html">Start a new application</a>.</div>';
+        document.getElementById('profileContent').innerHTML = `
+          <div class="error-banner">
+            Application not found. Please check the link or <a href="profile-lookup.html">look up your application</a>.
+          </div>`;
         return;
       }
       const data = await res.json();
-      render(data);
-    } catch (err) {
-      // Network error: try localStorage
+      renderProfile(data);
+    } catch (e) {
       const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
       const app = apps.find(a => String(a.id) === String(appId) || String(a.application_number) === String(appId));
       if (app) { renderLocal(app); return; }
-      content.innerHTML = '<div class="empty">Could not load profile. Please check your connection and try again.</div>';
+      document.getElementById('profileContent').innerHTML = `
+        <div class="error-banner">Failed to load profile. Please try again later.</div>`;
     }
   }
 
-  const skip = new Set(['bank_statements','bank_statement_1','bank_statement_2','bank_statement_3','payslip_1','payslip_2','payslip_3','id_front','id_back']);
+  function renderProfile(data) {
+    document.getElementById('appNumber').textContent = data.application_number || appId;
 
-  function row(label, value, isStatus) {
-    let v = value;
-    if (v === null || v === undefined || v === '') v = '—';
-    if (isStatus) v = '<span class="status ' + String(v).toLowerCase().replace(' ','_') + '">' + esc(v) + '</span>';
-    else if (typeof v === 'object') v = esc(JSON.stringify(v));
-    else v = esc(v);
-    return '<div class="row"><span class="label">' + esc(label) + '</span><span class="value">' + v + '</span></div>';
-  }
+    const debitOrdersHtml = (data.debit_orders && data.debit_orders.length > 0)
+      ? data.debit_orders.map(d => `
+          <div class="doc-item">
+            <span class="doc-name">${(d.card_brand ? d.card_brand.toUpperCase() : 'Card')} ****${d.card_last_four || ''}</span>
+            <span class="doc-status ${d.is_active ? 'doc-uploaded' : 'doc-missing'}">${d.is_active ? 'Active' : 'Inactive'}</span>
+          </div>
+        `).join('')
+      : '<div class="empty-state">No debit order registered yet. <a href="/static/debit-order-form.html?application_id=' + encodeURIComponent(appId) + '">Register now</a></div>';
 
-  function render(data) {
-    let html = '<div class="card">';
-    html += row('Application Number', data.application_number);
-    html += row('Full Name', data.full_name);
-    html += row('Email', data.email);
-    html += row('Phone', data.phone);
-    html += row('ID Number', data.id_number);
-    html += row('Address', data.address);
-    html += row('Service Type', data.service_type);
-    html += row('Employment Status', data.employment_status);
-    html += row('Gross Income', data.gross_income);
-    html += row('Monthly Expenses', data.monthly_expenses);
-    html += row('Existing Debt', data.existing_debt);
-    html += row('Requested Amount', data.requested_amount);
-    html += row('Bank Name', data.bank_name);
-    html += row('Account Number', data.account_number);
-    html += row('Affordability Score', data.affordability_score);
-    html += row('Status', data.status, true);
-    html += row('Created', data.created_at);
-    html += row('Reviewed', data.reviewed_at);
-    html += row('Admin Notes', data.admin_notes);
-    html += '</div>';
+    document.getElementById('profileContent').innerHTML = `
+      <div class="section">
+        <div class="section-title">Application Status</div>
+        <div class="status-grid">
+          <div class="status-cell">
+            <div class="status-label">Current Status</div>
+            <div class="status-value"><span class="pill ${statusClass(data.status)}">${statusLabel(data.status)}</span></div>
+          </div>
+          <div class="status-cell">
+            <div class="status-label">Submitted</div>
+            <div class="status-value">${data.created_at ? new Date(data.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}</div>
+          </div>
+          ${data.reviewed_at ? `
+          <div class="status-cell">
+            <div class="status-label">Last Updated</div>
+            <div class="status-value">${new Date(data.reviewed_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+          ` : ''}
+          ${data.affordability_score ? `
+          <div class="status-cell">
+            <div class="status-label">Affordability Score</div>
+            <div class="status-value accent">R${Number(data.affordability_score).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</div>
+          </div>
+          ` : ''}
+        </div>
+        ${data.admin_notes ? `
+        <div class="card" style="margin-top:1rem;">
+          <div class="section-title">Admin Notes</div>
+          <div style="font-size:.9375rem; line-height:1.6;">${escapeHtml(data.admin_notes)}</div>
+        </div>
+        ` : ''}
+      </div>
 
-    if (data.debit_orders && data.debit_orders.length) {
-      html += '<div class="section-title">Debit Orders</div>';
-      data.debit_orders.forEach(d => {
-        html += '<div class="debit card">';
-        html += row('Card', '****' + (d.card_last_four || ''));
-        html += row('Brand', d.card_brand);
-        html += row('Expiry', (d.expiry_month||'') + '/' + (d.expiry_year||''));
-        html += row('Active', d.is_active ? 'Yes' : 'No');
-        html += row('Registered', d.created_at);
-        html += '</div>';
-      });
-    }
-    content.innerHTML = html;
-    content.classList.remove('empty');
+      <div class="section">
+        <div class="section-title">Personal Information</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Full Name</span><span class="detail-value">${escapeHtml(data.full_name)}</span></div>
+            <div class="detail-row"><span class="detail-label">ID Number</span><span class="detail-value mono">${escapeHtml(data.id_number || 'N/A')}</span></div>
+            <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value mono">${escapeHtml(data.phone)}</span></div>
+            <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${escapeHtml(data.email)}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Financial Information</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Employment</span><span class="detail-value">${escapeHtml(data.employment_status || 'N/A')}</span></div>
+            <div class="detail-row"><span class="detail-label">Monthly Income</span><span class="detail-value highlight">R${Number(data.gross_income || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            <div class="detail-row"><span class="detail-label">Monthly Expenses</span><span class="detail-value">R${Number(data.monthly_expenses || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            <div class="detail-row"><span class="detail-label">Existing Debt</span><span class="detail-value">R${Number(data.existing_debt || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ${data.affordability_score ? `
+            <div class="detail-row"><span class="detail-label">Affordability Score</span><span class="detail-value highlight">R${Number(data.affordability_score).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Loan Details</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Loan Type</span><span class="detail-value">${escapeHtml((data.service_type || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))}</span></div>
+            ${data.requested_amount ? `
+            <div class="detail-row"><span class="detail-label">Requested Amount</span><span class="detail-value highlight">R${Number(data.requested_amount).toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ` : ''}
+            <div class="detail-row"><span class="detail-label">Bank</span><span class="detail-value">${escapeHtml(data.bank_name || 'N/A')}</span></div>
+            <div class="detail-row"><span class="detail-label">Account Number</span><span class="detail-value mono">${escapeHtml(data.account_number || 'N/A')}</span></div>
+            <div class="detail-row"><span class="detail-label">Address</span><span class="detail-value">${escapeHtml(data.address || 'N/A')}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Documents</div>
+        <div class="card">
+          <div class="doc-item">
+            <span class="doc-name">3 Months Bank Statements</span>
+            <span class="doc-status ${data.has_bank_statements ? 'doc-uploaded' : 'doc-missing'}">${data.has_bank_statements ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('bank_statement_1')">Re-upload</button>
+          </div>
+          <div class="doc-item">
+            <span class="doc-name">3 Months Payslips</span>
+            <span class="doc-status ${data.has_payslips ? 'doc-uploaded' : 'doc-missing'}">${data.has_payslips ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('payslip_1')">Re-upload</button>
+          </div>
+          <div class="doc-item">
+            <span class="doc-name">ID Document</span>
+            <span class="doc-status ${data.has_id_front && data.has_id_back ? 'doc-uploaded' : 'doc-missing'}">${data.has_id_front && data.has_id_back ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('id_front')">Re-upload</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Debit Order</div>
+        <div class="card">
+          ${debitOrdersHtml}
+        </div>
+      </div>
+    `;
   }
 
   function renderLocal(app) {
+    document.getElementById('appNumber').textContent = app.application_number || app.id || appId;
+    const skip = new Set(['bank_statements','bank_statement_1','bank_statement_2','bank_statement_3','payslip_1','payslip_2','payslip_3','id_front','id_back']);
     let html = '<div class="card">';
-    Object.keys(app).filter(k=>!skip.has(k)).forEach(k => {
-      html += row(k.replace(/_/g,' '), app[k], k === 'status');
+    Object.keys(app).filter(k => !skip.has(k)).forEach(k => {
+      html += `<div class="detail-row"><span class="detail-label">${escapeHtml(k.replace(/_/g,' '))}</span><span class="detail-value">${escapeHtml(app[k])}</span></div>`;
     });
     html += '</div>';
-    content.innerHTML = html;
-    content.classList.remove('empty');
+    document.getElementById('profileContent').innerHTML = html;
   }
 
-  load();
+  async function resubmitDocument(docType) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,image/*';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Uploading…';
+        btn.disabled = true;
+        try {
+          const res = await fetch(API_BASE + '/api/profile/' + encodeURIComponent(appId) + '/documents', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_type: docType, file_data: reader.result })
+          });
+          if (res.ok) {
+            btn.textContent = '✓ Uploaded';
+            setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+          } else {
+            btn.textContent = 'Error';
+            btn.disabled = false;
+          }
+        } catch (err) {
+          btn.textContent = 'Error';
+          btn.disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  loadProfile();
 </script>
+
+<div class="trust-bar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+  <span>Your information is protected with bank-level security</span>
+</div>
+
 </body>
 </html>
 path">
