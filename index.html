@@ -1110,20 +1110,19 @@
         return;
       }
 
-      const fileInputs = {
-        bank_statement_1: form.bank_statements.files[0],
-        bank_statement_2: form.bank_statements.files[1],
-        bank_statement_3: form.bank_statements.files[2],
-        payslip_1: form.payslips.files[0],
-        payslip_2: form.payslips.files[1],
-        payslip_3: form.payslips.files[2],
-        id_front: form.id_front.files[0],
-        id_back: form.id_back.files[0],
-      };
+      const docMappings = [
+        { input: form.bank_statements, keys: ['bank_statement_1', 'bank_statement_2', 'bank_statement_3'] },
+        { input: form.payslips, keys: ['payslip_1', 'payslip_2', 'payslip_3'] },
+        { input: form.id_front, keys: ['id_front'] },
+        { input: form.id_back, keys: ['id_back'] },
+      ];
 
       const docs = {};
-      for (const [key, file] of Object.entries(fileInputs)) {
-        if (file) docs[key] = await fileToBase64(file);
+      for (const m of docMappings) {
+        const files = (m.input && m.input.files) ? m.input.files : [];
+        for (let i = 0; i < m.keys.length; i++) {
+          if (files[i]) docs[m.keys[i]] = await fileToBase64(files[i]);
+        }
       }
 
       const payload = {
@@ -1148,9 +1147,12 @@
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) throw new Error('Failed');
-
-      const data = await res.json();
+      const resText = await res.text();
+      if (!res.ok) {
+        console.error('Apply failed:', res.status, resText);
+        throw new Error('Failed (' + res.status + '): ' + resText.slice(0, 200));
+      }
+      const data = JSON.parse(resText);
       btn.textContent = '✓ Application Submitted!';
       btn.style.background = 'hsl(142 72% 42%)';
       form.reset();
@@ -1158,8 +1160,10 @@
         window.location.href = '/static/debit-order-form.html?application_id=' + data.id;
       }, 800);
     } catch (err) {
+      console.error(err);
       btn.textContent = 'Error — try again';
       btn.disabled = false;
+      alert('Application failed: ' + (err && err.message ? err.message : err));
     }
   }
 </script>
