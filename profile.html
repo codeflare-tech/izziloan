@@ -96,6 +96,62 @@
     box-shadow: var(--shadow-card);
   }
 
+  .status-timeline {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    position: relative; margin-bottom: 1.75rem; padding: 0 .5rem;
+  }
+  .status-timeline::before {
+    content: ''; position: absolute; top: 1.1rem; left: 2rem; right: 2rem;
+    height: 3px; background: hsl(var(--border)); border-radius: 9999px; z-index: 0;
+  }
+  .timeline-progress {
+    position: absolute; top: 1.1rem; left: 2rem; height: 3px;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
+    border-radius: 9999px; z-index: 1; transition: width .6s ease;
+  }
+  .timeline-step {
+    position: relative; z-index: 2; text-align: center; flex: 1; min-width: 0;
+  }
+  .timeline-dot {
+    width: 2.25rem; height: 2.25rem; border-radius: 50%;
+    margin: 0 auto .6rem;
+    display: flex; align-items: center; justify-content: center;
+    background: hsl(var(--card)); border: 2px solid hsl(var(--border));
+    color: hsl(var(--muted)); font-weight: 700; font-size: .875rem;
+    transition: var(--transition-smooth);
+  }
+  .timeline-step.done .timeline-dot {
+    background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: #fff;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / .15);
+  }
+  .timeline-step.active .timeline-dot {
+    background: hsl(var(--accent)); border-color: hsl(var(--accent)); color: #fff;
+    box-shadow: 0 0 0 6px hsl(var(--accent) / .2);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .timeline-step.declined .timeline-dot {
+    background: hsl(0 84% 60%); border-color: hsl(0 84% 60%); color: #fff;
+    box-shadow: 0 0 0 4px hsl(0 84% 60% / .15);
+  }
+  .timeline-label {
+    font-size: .75rem; font-weight: 600; color: hsl(var(--muted));
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .timeline-step.done .timeline-label,
+  .timeline-step.active .timeline-label { color: hsl(var(--fg)); }
+  .timeline-sub {
+    font-size: .7rem; color: hsl(var(--muted)); margin-top: .2rem;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 6px hsl(var(--accent) / .2); }
+    50% { box-shadow: 0 0 0 10px hsl(var(--accent) / .08); }
+  }
+  .status-hero {
+    text-align: center; margin-bottom: 1.5rem;
+  }
+  .status-hero .pill { font-size: 1rem; padding: .6rem 1.4rem; }
+  .status-hero p { margin-top: .75rem; color: hsl(var(--muted)); font-size: .9rem; }
+
   .status-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
@@ -275,6 +331,33 @@
     }
   }
 
+  function statusMessage(status) {
+    const map = {
+      pending: 'Your application has been received and is awaiting review.',
+      under_review: 'Our team is currently reviewing your application.',
+      approved: 'Your loan has been approved! We will be in touch shortly.',
+      declined: 'Unfortunately your application was not approved at this time.',
+      withdrawn: 'This application has been withdrawn.'
+    };
+    return map[status] || 'Track your application status here.';
+  }
+  function stepClass(status, step) {
+    const order = { pending: 1, under_review: 2, approved: 3, declined: 3, withdrawn: 0 };
+    const cur = order[status] || 1;
+    if (step < cur) return 'done';
+    if (step === cur) {
+      if (status === 'declined') return 'declined';
+      return 'active';
+    }
+    return '';
+  }
+
+  function progressWidth(status) {
+    if (status === 'pending') return '0';
+    if (status === 'under_review') return 'calc(50% - 2rem)';
+    return 'calc(100% - 4rem)';
+  }
+
   function renderProfile(data) {
     document.getElementById('appNumber').textContent = data.application_number || appId;
 
@@ -290,6 +373,28 @@
     document.getElementById('profileContent').innerHTML = `
       <div class="section">
         <div class="section-title">Application Status</div>
+        <div class="status-hero">
+          <span class="pill ${statusClass(data.status)}">${statusLabel(data.status)}</span>
+          <p>${statusMessage(data.status)}</p>
+        </div>
+        <div class="status-timeline" id="statusTimeline">
+          <div class="timeline-progress" id="timelineProgress" style="width: ${progressWidth(data.status)};"></div>
+          <div class="timeline-step ${stepClass(data.status, 1)}">
+            <div class="timeline-dot">1</div>
+            <div class="timeline-label">Submitted</div>
+            <div class="timeline-sub">${data.created_at ? new Date(data.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' }) : ''}</div>
+          </div>
+          <div class="timeline-step ${stepClass(data.status, 2)}">
+            <div class="timeline-dot">2</div>
+            <div class="timeline-label">Under Review</div>
+            <div class="timeline-sub">${data.reviewed_at ? new Date(data.reviewed_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' }) : 'Pending'}</div>
+          </div>
+          <div class="timeline-step ${stepClass(data.status, 3)}">
+            <div class="timeline-dot">${data.status === 'approved' ? '✓' : (data.status === 'declined' ? '✕' : '3')}</div>
+            <div class="timeline-label">${data.status === 'approved' ? 'Approved' : (data.status === 'declined' ? 'Declined' : 'Decision')}</div>
+            <div class="timeline-sub">${data.status === 'approved' ? 'Congratulations!' : (data.status === 'declined' ? 'Not approved' : 'Awaiting')}</div>
+          </div>
+        </div>
         <div class="status-grid">
           <div class="status-cell">
             <div class="status-label">Current Status</div>
