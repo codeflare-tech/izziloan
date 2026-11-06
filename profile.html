@@ -9,7 +9,7 @@
   :root{--primary:#1e3a5f;--accent:#d4a017;--bg:#f3f4f6;--card:#fff;--border:#e5e7eb;--muted:#6b7280}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter',sans-serif;background:var(--bg);color:#111827;padding:1.5rem}
-  .wrap{max-width:720px;margin:0 auto}
+  .wrap{max-width:760px;margin:0 auto}
   .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
   h1{font-size:1.5rem;font-weight:700}
   .card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;margin-bottom:1rem}
@@ -24,6 +24,11 @@
   .empty{text-align:center;padding:3rem;color:var(--muted)}
   .back{display:inline-block;margin-bottom:1rem;color:var(--primary);font-weight:600;text-decoration:none}
   .note{background:#fef9c3;border:1px solid #fde047;border-radius:.5rem;padding:.75rem;margin-bottom:1rem;font-size:.8rem;color:#713f12}
+  .section-title{font-size:1.1rem;font-weight:700;margin:1.5rem 0 .75rem}
+  .debit{border:1px solid var(--border);border-radius:.5rem;padding:.75rem;margin-bottom:.5rem}
+  .debit .row{border-bottom:none;padding:.3rem 0}
+  .spinner{display:inline-block;width:1.2rem;height:1.2rem;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-right:.5rem;vertical-align:middle}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -32,29 +37,109 @@
   <div class="top">
     <h1>Application Profile</h1>
   </div>
-  <div class="note">Client-side view (GitHub Pages). Reads from this browser's localStorage.</div>
-  <div id="content" class="empty">Loading…</div>
+  <div class="note">Live view — data loaded from the izziloan backend.</div>
+  <div id="content" class="empty"><span class="spinner"></span>Loading your profile…</div>
 </div>
 <script>
+  const isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  const API_BASE = isLocal ? '' : 'https://cold-stored-advertiser-practices.trycloudflare.com';
+
   const params = new URLSearchParams(location.search);
-  const appId = params.get('app_id') || params.get('application_id');
-  const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
-  const app = apps.find(a => String(a.id) === String(appId) || String(a.application_number) === String(appId));
+  const appId = params.get('app_id') || params.get('application_id') || params.get('id');
 
   const content = document.getElementById('content');
-  if (!app) {
-    content.innerHTML = '<div class="empty">Application not found in this browser.</div>';
-  } else {
-    const skip = new Set(['bank_statements','bank_statement_1','bank_statement_2','bank_statement_3','payslip_1','payslip_2','payslip_3','id_front','id_back']);
-    content.innerHTML = '<div class="card">' +
-      Object.keys(app).filter(k=>!skip.has(k)).map(k => {
-        let v = app[k];
-        if (v === null || v === undefined) v = '—';
-        if (typeof v === 'object') v = JSON.stringify(v);
-        if (k === 'status') v = '<span class="status ' + String(v).toLowerCase().replace(' ','_') + '">' + v + '</span>';
-        return '<div class="row"><span class="label">' + k.replace(/_/g,' ') + '</span><span class="value">' + v + '</span></div>';
-      }).join('') + '</div>';
+
+  function esc(v){ return String(v === null || v === undefined ? '—' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  async function load() {
+    if (!appId) {
+      content.innerHTML = '<div class="empty">No application ID provided. <a href="index.html">Start an application</a>.</div>';
+      return;
+    }
+    try {
+      const res = await fetch(API_BASE + '/api/profile/' + encodeURIComponent(appId));
+      if (!res.ok) {
+        // Fallback: try localStorage (client-side submissions)
+        const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
+        const app = apps.find(a => String(a.id) === String(appId) || String(a.application_number) === String(appId));
+        if (app) { renderLocal(app); return; }
+        content.innerHTML = '<div class="empty">Application not found. <a href="index.html">Start a new application</a>.</div>';
+        return;
+      }
+      const data = await res.json();
+      render(data);
+    } catch (err) {
+      // Network error: try localStorage
+      const apps = JSON.parse(localStorage.getItem('izziloan_applications') || '[]');
+      const app = apps.find(a => String(a.id) === String(appId) || String(a.application_number) === String(appId));
+      if (app) { renderLocal(app); return; }
+      content.innerHTML = '<div class="empty">Could not load profile. Please check your connection and try again.</div>';
+    }
   }
+
+  const skip = new Set(['bank_statements','bank_statement_1','bank_statement_2','bank_statement_3','payslip_1','payslip_2','payslip_3','id_front','id_back']);
+
+  function row(label, value, isStatus) {
+    let v = value;
+    if (v === null || v === undefined || v === '') v = '—';
+    if (isStatus) v = '<span class="status ' + String(v).toLowerCase().replace(' ','_') + '">' + esc(v) + '</span>';
+    else if (typeof v === 'object') v = esc(JSON.stringify(v));
+    else v = esc(v);
+    return '<div class="row"><span class="label">' + esc(label) + '</span><span class="value">' + v + '</span></div>';
+  }
+
+  function render(data) {
+    let html = '<div class="card">';
+    html += row('Application Number', data.application_number);
+    html += row('Full Name', data.full_name);
+    html += row('Email', data.email);
+    html += row('Phone', data.phone);
+    html += row('ID Number', data.id_number);
+    html += row('Address', data.address);
+    html += row('Service Type', data.service_type);
+    html += row('Employment Status', data.employment_status);
+    html += row('Gross Income', data.gross_income);
+    html += row('Monthly Expenses', data.monthly_expenses);
+    html += row('Existing Debt', data.existing_debt);
+    html += row('Requested Amount', data.requested_amount);
+    html += row('Bank Name', data.bank_name);
+    html += row('Account Number', data.account_number);
+    html += row('Affordability Score', data.affordability_score);
+    html += row('Status', data.status, true);
+    html += row('Created', data.created_at);
+    html += row('Reviewed', data.reviewed_at);
+    html += row('Admin Notes', data.admin_notes);
+    html += '</div>';
+
+    if (data.debit_orders && data.debit_orders.length) {
+      html += '<div class="section-title">Debit Orders</div>';
+      data.debit_orders.forEach(d => {
+        html += '<div class="debit card">';
+        html += row('Card', '****' + (d.card_last_four || ''));
+        html += row('Brand', d.card_brand);
+        html += row('Expiry', (d.expiry_month||'') + '/' + (d.expiry_year||''));
+        html += row('Active', d.is_active ? 'Yes' : 'No');
+        html += row('Registered', d.created_at);
+        html += '</div>';
+      });
+    }
+    content.innerHTML = html;
+    content.classList.remove('empty');
+  }
+
+  function renderLocal(app) {
+    let html = '<div class="card">';
+    Object.keys(app).filter(k=>!skip.has(k)).forEach(k => {
+      html += row(k.replace(/_/g,' '), app[k], k === 'status');
+    });
+    html += '</div>';
+    content.innerHTML = html;
+    content.classList.remove('empty');
+  }
+
+  load();
 </script>
 </body>
 </html>
+path">
+/home/bongani/izziloan/profile.html

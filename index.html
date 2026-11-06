@@ -941,7 +941,7 @@
   // API base: on static hosts the backend isn't co-located, so route calls
   // through the Cloudflare tunnel; on localhost the backend is served locally.
   const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? '' : 'https://reflected-items-sophisticated-officially.trycloudflare.com';
+    ? '' : 'https://cold-stored-advertiser-practices.trycloudflare.com';
   // Year
   document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -1149,7 +1149,7 @@
       // Try the real backend first (local dev). On static hosts (GitHub Pages)
       // the backend is unavailable, so fall back to client-side storage.
       const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-        ? '' : 'https://reflected-items-sophisticated-officially.trycloudflare.com';
+        ? '' : 'https://cold-stored-advertiser-practices.trycloudflare.com';
       try {
         const res = await fetch(API_BASE + '/api/apply', {
           method: 'POST',
