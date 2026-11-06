@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>izziloan Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --primary:#1e3a5f; --accent:#d4a017; --bg:#f3f4f6; --card:#fff; --border:#e5e7eb; --muted:#6b7280; --danger:#dc2626; --success:#059669; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:#111827;padding:1.5rem}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+  .top h1{font-size:1.5rem;font-weight:700}
+  .badge{background:var(--primary);color:#fff;padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:600}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1rem}
+  .stat .label{font-size:.75rem;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:.05em}
+  .stat .val{font-size:1.75rem;font-weight:700;margin-top:.25rem}
+  .tabs{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+  .tab{padding:.5rem 1rem;border:1px solid var(--border);background:var(--card);border-radius:.5rem;cursor:pointer;font-weight:500;font-size:.875rem}
+  .tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .panel{display:none}.panel.active{display:block}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:.75rem;overflow:hidden}
+  th,td{padding:.75rem 1rem;text-align:left;font-size:.875rem;border-bottom:1px solid var(--border)}
+  th{background:#f9fafb;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.7rem;letter-spacing:.05em}
+  tr:last-child td{border-bottom:none}
+  .status{padding:.2rem .6rem;border-radius:999px;font-size:.7rem;font-weight:600}
+  .status.pending{background:#fef3c7;color:#92400e}
+  .status.approved{background:#d1fae5;color:#065f46}
+  .status.declined{background:#fee2e2;color:#991b1b}
+  .status.under_review{background:#dbeafe;color:#1e40af}
+  .actions button{padding:.3rem .6rem;border:1px solid var(--border);background:#fff;border-radius:.375rem;cursor:pointer;font-size:.75rem;margin-right:.25rem}
+  .actions button.approve{border-color:var(--success);color:var(--success)}
+  .actions button.decline{border-color:var(--danger);color:var(--danger)}
+  .empty{text-align:center;padding:3rem;color:var(--muted)}
+  .detail{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:1rem;z-index:10}
+  .detail.show{display:flex}
+  .detail-card{background:#fff;border-radius:.75rem;max-width:700px;width:100%;max-height:90vh;overflow:auto;padding:1.5rem}
+  .detail-card h2{margin-bottom:1rem}
+  .detail-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.875rem;gap:1rem}
+  .detail-row:last-child{border-bottom:none}
+  .detail-label{color:var(--muted);font-weight:500;flex-shrink:0}
+  .detail-value{font-weight:600;text-align:right;word-break:break-word}
+  .close{float:right;cursor:pointer;font-size:1.25rem;color:var(--muted)}
+  .masked{color:var(--muted);font-style:italic;font-size:.8rem}
+  .note{background:#fef9c3;border:1px solid #fde047;border-radius:.5rem;padding:.75rem;margin-bottom:1rem;font-size:.8rem;color:#713f12}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <h1>izziloan Admin Dashboard <span class="badge">Client-side</span></h1>
+    <p style="color:var(--muted);font-size:.875rem;margin-top:.25rem">Data stored in this browser (localStorage). For the full server-side admin, run the FastAPI backend locally.</p>
+  </div>
+  <div>
+    <button class="tab" onclick="clearAll()" style="border-color:var(--danger);color:var(--danger)">Clear All Data</button>
+  </div>
+</div>
+
+<div class="note">⚠ This is the GitHub Pages (client-side) admin view. Applications and debit orders submitted on this site are stored in your browser's localStorage. They are visible only on this device/browser.</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('applications')">Applications</button>
+  <button class="tab" onclick="showTab('debitorders')">Debit Orders</button>
+</div>
+
+<div id="applications" class="panel active"></div>
+<div id="debitorders" class="panel"></div>
+
+<div class="detail" id="detail">
+  <div class="detail-card">
+    <span class="close" onclick="closeDetail()">&times;</span>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<script>
+  function getApps(){ return JSON.parse(localStorage.getItem('izziloan_applications')||'[]'); }
+  function setApps(a){ localStorage.setItem('izziloan_applications', JSON.stringify(a)); }
+  function getOrders(){ return JSON.parse(localStorage.getItem('izziloan_debit_orders')||'[]'); }
+  function setOrders(o){ localStorage.setItem('izziloan_debit_orders', JSON.stringify(o)); }
+
+  function showTab(name){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    event.target.classList.add('active');
+    render();
+  }
+
+  function statusClass(s){ return (s||'pending').toLowerCase().replace(' ','_'); }
+
+  function renderStats(){
+    const apps=getApps(); const orders=getOrders();
+    const pending=apps.filter(a=>(a.status||'pending')==='pending').length;
+    const approved=apps.filter(a=>a.status==='approved').length;
+    const declined=apps.filter(a=>a.status==='declined').length;
+    document.getElementById('stats').innerHTML = `
+      <div class="stat"><div class="label">Applications</div><div class="val">${apps.length}</div></div>
+      <div class="stat"><div class="label">Pending</div><div class="val">${pending}</div></div>
+      <div class="stat"><div class="label">Approved</div><div class="val">${approved}</div></div>
+      <div class="stat"><div class="label">Declined</div><div class="val">${declined}</div></div>
+      <div class="stat"><div class="label">Debit Orders</div><div class="val">${orders.length}</div></div>
+    `;
+  }
+
+  function renderApps(){
+    const apps=getApps();
+    const el=document.getElementById('applications');
+    if(!apps.length){ el.innerHTML='<div class="empty">No applications yet.</div>'; return; }
+    el.innerHTML = `<table>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Loan Type</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      ${apps.map((a,i)=>`<tr>
+        <td>${a.application_number||a.id}</td>
+        <td>${a.full_name||''}</td>
+        <td>${a.email||''}</td>
+        <td>${a.phone||''}</td>
+        <td>${(a.service_type||'').replace(/_/g,' ')}</td>
+        <td>R${Number(a.requested_amount||0).toLocaleString('en-ZA')}</td>
+        <td><span class="status ${statusClass(a.status)}">${a.status||'pending'}</span></td>
+        <td class="actions">
+          <button onclick="viewApp(${i})">View</button>
+          <button class="approve" onclick="setStatus(${i},'approved')">Approve</button>
+          <button class="decline" onclick="setStatus(${i},'declined')">Decline</button>
+        </td>
+      </tr>`).join('')}
+      </tbody></table>`;
+  }
+
+  function renderOrders(){
+    const orders=getOrders();
+    const el=document.getElementById('debitorders');
+    if(!orders.length){ el.innerHTML='<div class="empty">No debit orders yet.</div>'; return; }
+    el.innerHTML = `<table>
+      <thead><tr><th>ID</th><th>Cardholder</th><th>Brand</th><th>Card</th><th>Expiry</th><th>App ID</th><th>Date</th></tr></thead>
+      <tbody>
+      ${orders.map(o=>`<tr>
+        <td>${o.id}</td>
+        <td>${o.cardholder_name||''}</td>
+        <td>${o.card_brand||''}</td>
+        <td>****${o.card_last_four||''} <span class="masked">(full number not stored)</span></td>
+        <td>${o.expiry_month}/${o.expiry_year}</td>
+        <td>${o.application_id||''}</td>
+        <td>${o.created_at?new Date(o.created_at).toLocaleString():''}</td>
+      </tr>`).join('')}
+      </tbody></table>`;
+  }
+
+  function render(){ renderStats(); renderApps(); renderOrders(); }
+
+  function setStatus(i,status){
+    const apps=getApps();
+    apps[i].status=status;
+    apps[i].reviewed_at=new Date().toISOString();
+    setApps(apps);
+    render();
+  }
+
+  function viewApp(i){
+    const a=getApps()[i];
+    const body=document.getElementById('detailBody');
+    body.innerHTML = `<h2>Application ${a.application_number||a.id}</h2>` +
+      Object.keys(a).filter(k=>k!=='bank_statements'&&k!=='bank_statement_1'&&k!=='bank_statement_2'&&k!=='bank_statement_3'&&k!=='payslip_1'&&k!=='payslip_2'&&k!=='payslip_3'&&k!=='id_front'&&k!=='id_back').map(k=>{
+        let v=a[k];
+        if(v===null||v===undefined) v='—';
+        if(typeof v==='object') v=JSON.stringify(v);
+        return `<div class="detail-row"><span class="detail-label">${k.replace(/_/g,' ')}</span><span class="detail-value">${v}</span></div>`;
+      }).join('');
+    document.getElementById('detail').classList.add('show');
+  }
+  function closeDetail(){ document.getElementById('detail').classList.remove('show'); }
+
+  function clearAll(){
+    if(!confirm('Clear all applications and debit orders from this browser?')) return;
+    localStorage.removeItem('izziloan_applications');
+    localStorage.removeItem('izziloan_debit_orders');
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
