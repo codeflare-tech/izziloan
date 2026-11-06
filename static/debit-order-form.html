@@ -283,7 +283,7 @@
         <p>Your payment information is encrypted and secure.</p>
       </div>
 
-      <form id="debitOrderForm" novalidate autocomplete="on">
+      <form id="debitOrderForm" method="post" action="#" novalidate autocomplete="on">
         <!-- Cardholder Name -->
         <div class="form-group">
           <label for="cardholderName">Cardholder Name <span class="required">*</span></label>
@@ -293,6 +293,9 @@
             name="cardholderName"
             placeholder="JOHN DOE"
             autocomplete="cc-name"
+            autocorrect="off"
+            autocapitalize="characters"
+            spellcheck="false"
             required
           />
           <div class="error-message" id="nameError">Please enter the cardholder name</div>
@@ -323,6 +326,9 @@
             maxlength="19"
             inputmode="numeric"
             autocomplete="cc-number"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
             required
           />
           <div class="error-message" id="cardError">Enter a valid 16-digit card number</div>
@@ -345,6 +351,9 @@
               maxlength="5"
               inputmode="numeric"
               autocomplete="cc-exp"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
               required
             />
             <div class="error-message" id="expiryError">Enter a valid future date (MM/YY)</div>
@@ -360,6 +369,9 @@
               maxlength="4"
               inputmode="numeric"
               autocomplete="cc-csc"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
               required
             />
             <div class="error-message" id="cvvError">Enter 3 or 4 digits</div>
