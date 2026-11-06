@@ -586,6 +586,15 @@
     adminLink.style.marginRight = '0.5rem';
     adminLink.textContent = 'View in Admin Dashboard →';
     document.querySelector('.card').appendChild(adminLink);
+
+    // Redirect to profile after short delay
+    setTimeout(() => {
+      if (location.hostname.indexOf('github.io') !== -1) {
+        window.location.href = 'profile.html?app_id=' + applicationId;
+      } else {
+        window.location.href = '/profile/' + applicationId;
+      }
+    }, 2500);
   });
 </script>
 </body>
