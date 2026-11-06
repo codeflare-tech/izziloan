@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Audit Logs — izziloan{% endblock %}
+{% block page_title %}Audit Logs{% endblock %}
+
+{% block content %}
+<div class="table-wrap">
+  <div class="table-header"><h3>System Activity</h3></div>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Target</th><th>Details</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td style="font-size:.8125rem;color:hsl(var(--muted));white-space:nowrap;">{{ log.created_at.strftime('%d %b %Y %H:%M:%S') }}</td>
+          <td style="font-weight:500;">{{ log.admin_email or 'system' }}</td>
+          <td><span class="badge badge-review">{{ log.action }}</span></td>
+          <td style="font-size:.8125rem;">{{ log.target_type or '—' }}{% if log.target_id %} #{{ log.target_id }}{% endif %}</td>
+          <td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ log.details or '' }}">{{ log.details or '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No audit logs yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

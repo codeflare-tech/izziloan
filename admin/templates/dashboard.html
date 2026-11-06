@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — izziloan{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Applications</div>
+    <div class="stat-value">{{ total_apps }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Pending Review</div>
+    <div class="stat-value accent">{{ pending_apps }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Contacts</div>
+    <div class="stat-value">{{ total_contacts }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">New Contacts</div>
+    <div class="stat-value success">{{ new_contacts }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Debit Orders</div>
+    <div class="stat-value" style="color:hsl(var(--primary-light))">{{ total_debit_orders }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Active Debit Orders</div>
+    <div class="stat-value success">{{ active_debit_orders }}</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+  <!-- Recent Applications -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>Recent Applications</h3>
+      <a href="/admin/applications" class="btn btn-ghost btn-sm">View All →</a>
+    </div>
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Service</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for app in recent_apps %}
+        <tr>
+          <td><strong>{{ app.application_number }}</strong></td>
+          <td>{{ app.full_name }}</td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ app.service_type.value.replace('_', ' ').title() }}</td>
+          <td>
+            {% set status_class = {
+              'pending': 'badge-pending',
+              'under_review': 'badge-review',
+              'approved': 'badge-approved',
+              'declined': 'badge-declined'
+            }.get(app.status.value, 'badge-new') %}
+            <span class="badge {{ status_class }}">{{ app.status.value.replace('_', ' ') }}</span>
+          </td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ app.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No applications yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Contacts -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>Recent Contacts</h3>
+      <a href="/admin/contacts" class="btn btn-ghost btn-sm">View All →</a>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Service</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for c in recent_contacts %}
+        <tr>
+          <td><strong>{{ c.name }}</strong></td>
+          <td style="font-size:.8125rem;">{{ c.email }}</td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ c.service_interest or '—' }}</td>
+          <td>
+            {% set cstatus = { 'new': 'badge-new', 'contacted': 'badge-contacted', 'closed': 'badge-declined' }.get(c.status, 'badge-new') %}
+            <span class="badge {{ cstatus }}">{{ c.status }}</span>
+          </td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ c.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No contacts yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Debit Orders -->
+  <div class="table-wrap" style="margin-top:1.5rem;">
+    <div class="table-header">
+      <h3>Recent Debit Orders</h3>
+      <a href="/admin/debit-orders" class="btn btn-ghost btn-sm">View All →</a>
+    </div>
+    <table>
+      <thead><tr><th>Cardholder</th><th>Card</th><th>Expiry</th><th>Status</th><th>Registered</th></tr></thead>
+      <tbody>
+        {% for o in recent_debit_orders %}
+        <tr>
+          <td><strong>{{ o.cardholder_name }}</strong></td>
+          <td>
+            <span style="font-weight:600;text-transform:uppercase;">{{ o.card_brand or 'unknown' }}</span>
+            <span style="font-size:.8125rem;color:hsl(var(--muted));">****{{ o.card_last_four }}</span>
+          </td>
+          <td>{{ "%02d/%02d"|format(o.expiry_month, o.expiry_year) }}</td>
+          <td>
+            {% if o.is_active %}
+              <span class="badge badge-approved">Active</span>
+            {% else %}
+              <span class="badge badge-declined">Inactive</span>
+            {% endif %}
+          </td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ o.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No debit orders yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

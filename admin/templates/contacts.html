@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Contacts — izziloan{% endblock %}
+{% block page_title %}Contact Submissions{% endblock %}
+
+{% block content %}
+<div class="table-wrap">
+  <div class="table-header"><h3>All Contacts</h3></div>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Service Interest</th><th>Message</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for c in contacts %}
+        <tr>
+          <td><strong>{{ c.name }}</strong></td>
+          <td style="font-size:.8125rem;">{{ c.email }}</td>
+          <td style="font-size:.8125rem;">{{ c.phone or '—' }}</td>
+          <td style="font-size:.8125rem;">{{ c.service_interest or '—' }}</td>
+          <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ c.message }}">{{ c.message }}</td>
+          <td>
+            <form method="post" action="/admin/api/contacts/{{ c.id }}" style="display:inline;">
+              <select name="status" onchange="this.form.submit()" style="font-size:.8125rem;padding:.25rem .5rem;">
+                <option value="new" {% if c.status == 'new' %}selected{% endif %}>New</option>
+                <option value="contacted" {% if c.status == 'contacted' %}selected{% endif %}>Contacted</option>
+                <option value="closed" {% if c.status == 'closed' %}selected{% endif %}>Closed</option>
+              </select>
+            </form>
+          </td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ c.created_at.strftime('%d %b %Y %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No contacts yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access izziloan on Your Phone</title>
+<style>
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+    text-align: center;
+    color: #1f2937;
+  }
+  h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+  .qr-box {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  .url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    word-break: break-all;
+    font-size: 1.125rem;
+    color: #2563eb;
+  }
+  .links { margin-top: 2rem; }
+  .links a {
+    display: inline-block;
+    margin: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+  }
+  .links a:hover { background: #1d4ed8; }
+  .note {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 0.5rem;
+    color: #92400e;
+    font-size: 0.9375rem;
+  }
+</style>
+</head>
+<body>
+  <h1>📱 Access izziloan on Your Phone</h1>
+  <p>Make sure your phone is connected to the same WiFi network as this computer.</p>
+  
+  <div class="qr-box">
+    <h2>Public Site</h2>
+    <div id="publicQr"></div>
+    <div class="url">https://turner-numeric-allow-communication.trycloudflare.com/</div>
+    <div class="links">
+      <a href="https://turner-numeric-allow-communication.trycloudflare.com/" target="_blank">Open Site</a>
+    </div>
+    </div>
+
+    <div class="qr-box">
+    <h2>Admin Dashboard</h2>
+    <div id="adminQr"></div>
+    <div class="url">https://turner-numeric-allow-communication.trycloudflare.com/admin/login</div>
+    <div class="links">
+      <a href="https://turner-numeric-allow-communication.trycloudflare.com/admin/login" target="_blank">Open Admin</a>
+    </div>
+    </div>
+
+  <div class="note">
+    <strong>⚠️ Important:</strong> Your phone must trust the local SSL certificate. 
+    Open either link in Chrome/Safari and accept the security exception if prompted.
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script>
+    QRCode.toCanvas(document.getElementById('publicQr'), 'https://10.247.5.158:8000/', { width: 200 });
+    QRCode.toCanvas(document.getElementById('adminQr'), 'https://10.247.5.158:8000/admin/login', { width: 200 });
+  </script>
+</body>
+</html>

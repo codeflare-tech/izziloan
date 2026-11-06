@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Admin — izziloan{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: 220 20% 96%;
+    --fg: 220 65% 15%;
+    --primary: 220 65% 33%;
+    --primary-light: 220 55% 45%;
+    --accent: 45 62% 53%;
+    --muted: 220 20% 45%;
+    --border: 220 20% 88%;
+    --card: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --success: 142 72% 42%;
+    --radius: 0.75rem;
+    --sidebar-w: 260px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: hsl(var(--bg)); color: hsl(var(--fg)); display: flex; min-height: 100vh; }
+  a { text-decoration: none; color: inherit; }
+
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-w); background: hsl(var(--primary)); color: #fff;
+    position: fixed; inset: 0 auto 0 0; z-index: 50; display: flex; flex-direction: column;
+  }
+  .sidebar-brand {
+    padding: 1.5rem; display: flex; align-items: center; gap: .75rem;
+    border-bottom: 1px solid hsla(0 0% 100% / .1);
+  }
+  .sidebar-brand-mark {
+    width: 2.25rem; height: 2.25rem; border-radius: .6rem;
+    background: var(--gradient-gold, linear-gradient(135deg, hsl(45 62% 53%), hsl(45 62% 65%)));
+    display: grid; place-items: center; font-weight: 800; color: hsl(var(--primary-dark, 220 75% 25%)); font-size: 1rem;
+  }
+  .sidebar-brand span { font-weight: 700; font-size: 1.2rem; letter-spacing: -.02em; }
+  .sidebar-nav { flex: 1; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: .25rem; }
+  .sidebar-nav a {
+    display: flex; align-items: center; gap: .75rem; padding: .7rem 1rem;
+    border-radius: var(--radius); color: hsla(0 0% 100% / .8); font-weight: 500; font-size: .9375rem;
+    transition: all .2s;
+  }
+  .sidebar-nav a:hover, .sidebar-nav a.active { background: hsla(0 0% 100% / .12); color: #fff; }
+  .sidebar-nav a .icon { width: 1.25rem; text-align: center; font-size: 1.1rem; }
+  .sidebar-footer { padding: 1.25rem; border-top: 1px solid hsla(0 0% 100% / .1); font-size: .8125rem; opacity: .7; }
+
+  /* Main */
+  .main { flex: 1; margin-left: var(--sidebar-w); display: flex; flex-direction: column; min-width: 0; }
+  .topbar {
+    background: hsl(var(--card)); border-bottom: 1px solid hsl(var(--border));
+    padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar h1 { font-size: 1.25rem; font-weight: 700; }
+  .topbar-meta { font-size: .875rem; color: hsl(var(--muted)); }
+
+  .content { flex: 1; padding: 2rem; }
+
+  /* Cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem;
+  }
+  .stat-label { font-size: .8125rem; color: hsl(var(--muted)); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+  .stat-value.accent { color: hsl(var(--accent)); }
+  .stat-value.danger { color: hsl(var(--destructive)); }
+  .stat-value.success { color: hsl(var(--success)); }
+
+  /* Tables */
+  .table-wrap { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); overflow: hidden; }
+  .table-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid hsl(var(--border)); display: flex; justify-content: space-between; align-items: center; }
+  .table-header h3 { font-size: 1.0625rem; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: .875rem 1.5rem; text-align: left; font-size: .9375rem; }
+  th { background: hsl(var(--bg)); font-weight: 600; color: hsl(var(--muted)); font-size: .8125rem; text-transform: uppercase; letter-spacing: .03em; }
+  tr { border-bottom: 1px solid hsl(var(--border)); }
+  tr:last-child { border-bottom: none; }
+  tr:hover { background: hsla(220 65% 33% / .02); }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; padding: .25rem .75rem; border-radius: 9999px;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+  }
+  .badge-pending { background: hsl(45 62% 53% / .15); color: hsl(35 80% 30%); }
+  .badge-review { background: hsl(220 55% 45% / .12); color: hsl(220 65% 33%); }
+  .badge-approved { background: hsl(142 72% 42% / .12); color: hsl(142 72% 32%); }
+  .badge-declined { background: hsl(0 84% 60% / .12); color: hsl(0 84% 40%); }
+  .badge-new { background: hsl(220 55% 45% / .12); color: hsl(220 65% 33%); }
+  .badge-contacted { background: hsl(142 72% 42% / .12); color: hsl(142 72% 32%); }
+
+  /* Actions */
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem;
+    border-radius: var(--radius); font-weight: 600; font-size: .875rem; cursor: pointer;
+    border: 1px solid transparent; transition: all .2s;
+  }
+  .btn-sm { padding: .35rem .75rem; font-size: .8125rem; }
+  .btn-primary { background: hsl(var(--primary)); color: #fff; border-color: hsl(var(--primary)); }
+  .btn-primary:hover { background: hsl(var(--primary-light)); }
+  .btn-ghost { background: transparent; color: hsl(var(--fg)); border-color: hsl(var(--border)); }
+  .btn-ghost:hover { background: hsl(var(--bg)); }
+  .btn-success { background: hsl(var(--success)); color: #fff; }
+  .btn-danger { background: hsl(var(--destructive)); color: #fff; }
+
+  /* Forms */
+  select, input, textarea {
+    padding: .5rem .75rem; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px);
+    font-family: inherit; font-size: .9375rem; background: #fff;
+  }
+  select:focus, input:focus, textarea:focus { outline: none; border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary) / .1); }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); transition: transform .3s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .content { padding: 1rem; }
+    th, td { padding: .75rem 1rem; }
+  }
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-mark">i</div>
+    <span>izziloan</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/admin/" class="{% if request.url.path == '/admin/' %}active{% endif %}">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="/admin/applications" class="{% if '/admin/applications' in request.url.path %}active{% endif %}">
+      <span class="icon">📋</span> Applications
+    </a>
+    <a href="/admin/contacts" class="{% if '/admin/contacts' in request.url.path %}active{% endif %}">
+      <span class="icon">✉️</span> Contacts {% if new_contacts > 0 %}<span style="margin-left:auto;background:hsl(var(--accent));color:#fff;padding:.15rem .5rem;border-radius:9999px;font-size:.75rem;font-weight:700;">{{ new_contacts }}</span>{% endif %}
+    </a>
+    <a href="/admin/debit-orders" class="{% if '/admin/debit-orders' in request.url.path %}active{% endif %}">
+      <span class="icon">💳</span> Debit Orders
+    </a>
+    <a href="/admin/audit" class="{% if '/admin/audit' in request.url.path %}active{% endif %}">
+      <span class="icon">🔍</span> Audit Logs
+    </a>
+  </nav>
+  <div class="sidebar-footer" style="display:flex;flex-direction:column;gap:.5rem;">
+    <a href="/" target="_blank" style="color:inherit;">← Back to Site</a>
+    <button onclick="logout()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:.8125rem;opacity:.7;text-align:left;padding:0;">Logout</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none" id="mobileToggle">☰</button>
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+    </div>
+    <div class="topbar-meta">izziloan Admin v1.0</div>
+  </div>
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<script>
+  // Mobile sidebar toggle
+  if (window.innerWidth <= 768) {
+    document.getElementById('mobileToggle').style.display = 'inline-flex';
+  }
+
+  async function logout() {
+    await fetch('/admin/logout', { method: 'POST' });
+    window.location.href = '/admin/login';
+  }
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

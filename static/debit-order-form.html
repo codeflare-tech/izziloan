@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Your Card to Process Your Loan — izziloan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 65% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 65% 15%;
+    --primary: 220 65% 33%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 220 55% 45%;
+    --primary-dark: 220 75% 25%;
+    --accent: 45 62% 53%;
+    --accent-foreground: 220 65% 15%;
+    --accent-light: 45 62% 65%;
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 220 65% 33%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 20% 45%;
+    --destructive: 0 84% 60%;
+    --border: 220 20% 88%;
+    --input: 220 20% 88%;
+    --ring: 220 65% 33%;
+    --radius: 0.75rem;
+    --gradient-primary: linear-gradient(135deg, hsl(220 65% 33%), hsl(220 55% 45%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 62% 53%), hsl(45 62% 65%));
+    --gradient-hero: linear-gradient(180deg, hsl(220 65% 33%), hsl(220 75% 25%));
+    --shadow-card: 0 4px 20px -2px hsl(220 65% 33% / .08);
+    --shadow-card-hover: 0 8px 30px -4px hsl(220 65% 33% / .15);
+    --shadow-gold: 0 4px 20px -2px hsl(45 62% 53% / .2);
+    --transition-smooth: all .3s cubic-bezier(.4, 0, .2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* Hero band */
+  .hero {
+    background: var(--gradient-hero);
+    padding: 3.5rem 1rem 3rem;
+    text-align: center;
+    color: hsl(var(--primary-foreground));
+  }
+  .hero h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .hero p {
+    font-size: 0.9375rem;
+    opacity: 0.85;
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+
+  /* Form card */
+  .page {
+    max-width: 40rem;
+    margin: -1.5rem auto 3rem;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+  }
+  .card {
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 2rem;
+    border: 1px solid hsl(var(--border));
+  }
+  .card-header {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+  .card-header p {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+    margin-top: 0.25rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.375rem;
+  }
+  label .required {
+    color: hsl(var(--destructive));
+    margin-left: 2px;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid hsl(var(--input));
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    font-family: inherit;
+    background: #fff;
+    color: hsl(var(--foreground));
+    transition: var(--transition-smooth);
+  }
+  input::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+  input:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / .15);
+  }
+  input.error {
+    border-color: hsl(var(--destructive));
+    background-color: hsl(0 84% 60% / .05);
+  }
+
+  .error-message {
+    color: hsl(var(--destructive));
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+    display: none;
+    font-weight: 500;
+  }
+  .error-message.visible { display: block; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  /* Card scheme pills */
+  .card-schemes {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .scheme-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: hsl(var(--secondary));
+    color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--border));
+    transition: var(--transition-smooth);
+  }
+  .scheme-pill.active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+  }
+  .scheme-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: .6;
+  }
+
+  /* CTA button */
+  .submit-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--gradient-primary);
+    color: hsl(var(--primary-foreground));
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-card);
+  }
+  .submit-btn:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-1px);
+  }
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+  .submit-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Secure footer */
+  .secure-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    font-size: 0.8125rem;
+    color: hsl(var(--muted-foreground));
+    font-weight: 500;
+  }
+  .secure-badge svg {
+    width: 16px;
+    height: 16px;
+    color: hsl(var(--accent));
+  }
+
+  /* Success state */
+  .success-message {
+    display: none;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+    color: hsl(var(--foreground));
+    font-size: 0.9375rem;
+    text-align: center;
+    font-weight: 500;
+  }
+  .success-message.visible { display: block; }
+
+  /* Info notice */
+  .info-notice {
+    display: flex;
+    gap: 0.75rem;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+    margin-top: 1.25rem;
+    font-size: 0.8125rem;
+    color: hsl(var(--muted-foreground));
+  }
+  .info-notice svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: hsl(var(--primary));
+  }
+
+  @media (max-width: 480px) {
+    .row { grid-template-columns: 1fr; }
+    .card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Link Your Card to Process Your Loan</h1>
+  </div>
+
+  <div class="page">
+    <div class="card">
+      <div class="card-header">
+        <h2>Card Details</h2>
+        <p>Your payment information is encrypted and secure.</p>
+      </div>
+
+      <form id="debitOrderForm" novalidate autocomplete="on">
+        <!-- Cardholder Name -->
+        <div class="form-group">
+          <label for="cardholderName">Cardholder Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="cardholderName"
+            name="cardholderName"
+            placeholder="JOHN DOE"
+            autocomplete="cc-name"
+            required
+          />
+          <div class="error-message" id="nameError">Please enter the cardholder name</div>
+        </div>
+
+        <!-- Bank Name -->
+        <div class="form-group">
+          <label for="bankName">Bank Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="bankName"
+            name="bankName"
+            placeholder="e.g. ABSA, Standard Bank, FNB, Nedbank, Capitec"
+            autocomplete="off"
+            required
+          />
+          <div class="error-message" id="bankError">Please enter your bank name</div>
+        </div>
+
+        <!-- Card Number -->
+        <div class="form-group">
+          <label for="cardNumber">Card Number <span class="required">*</span></label>
+          <input
+            type="text"
+            id="cardNumber"
+            name="cardNumber"
+            placeholder="1234 5678 9012 3456"
+            maxlength="19"
+            inputmode="numeric"
+            autocomplete="cc-number"
+            required
+          />
+          <div class="error-message" id="cardError">Enter a valid 16-digit card number</div>
+          <div class="card-schemes" id="cardSchemes">
+            <span class="scheme-pill" data-scheme="visa"><span class="dot"></span>Visa</span>
+            <span class="scheme-pill" data-scheme="mc"><span class="dot"></span>Mastercard</span>
+            <span class="scheme-pill" data-scheme="amex"><span class="dot"></span>Amex</span>
+          </div>
+        </div>
+
+        <!-- Expiry & CVV -->
+        <div class="row">
+          <div class="form-group">
+            <label for="expiry">Expiry Date (MM/YY) <span class="required">*</span></label>
+            <input
+              type="text"
+              id="expiry"
+              name="expiry"
+              placeholder="MM/YY"
+              maxlength="5"
+              inputmode="numeric"
+              autocomplete="cc-exp"
+              required
+            />
+            <div class="error-message" id="expiryError">Enter a valid future date (MM/YY)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV/CVC <span class="required">*</span></label>
+            <input
+              type="text"
+              id="cvv"
+              name="cvv"
+              placeholder="123"
+              maxlength="4"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              required
+            />
+            <div class="error-message" id="cvvError">Enter 3 or 4 digits</div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Register Debit Order</button>
+
+        <div class="secure-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>256-bit SSL encrypted — your data is secure</span>
+        </div>
+
+        <div class="success-message" id="successMsg">
+          ✓ Debit order registered successfully. A confirmation will be sent to your email.
+        </div>
+
+        <div class="info-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>This form is for demonstration purposes. Connect it to your payment processor before going live.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById('debitOrderForm');
+  const cardInput = document.getElementById('cardNumber');
+  const expiryInput = document.getElementById('expiry');
+  const cvvInput = document.getElementById('cvv');
+  const schemePills = document.querySelectorAll('.scheme-pill');
+
+  // --- Formatting ---
+  cardInput.addEventListener('input', (e) => {
+    let val = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+    if (val.length > 16) val = val.slice(0, 16);
+    const spaced = val.match(/.{1,4}/g)?.join(' ') || val;
+    e.target.value = spaced;
+
+    // Detect scheme
+    schemePills.forEach(p => p.classList.remove('active'));
+    if (/^4/.test(val)) {
+      document.querySelector('[data-scheme="visa"]').classList.add('active');
+      cvvInput.maxLength = 3;
+    } else if (/^5[1-5]/.test(val) || /^2[2-7]/.test(val)) {
+      document.querySelector('[data-scheme="mc"]').classList.add('active');
+      cvvInput.maxLength = 3;
+    } else if (/^3[47]/.test(val)) {
+      document.querySelector('[data-scheme="amex"]').classList.add('active');
+      cvvInput.maxLength = 4;
+    } else {
+      cvvInput.maxLength = 3;
+    }
+  });
+
+  expiryInput.addEventListener('input', (e) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length >= 2) {
+      let month = val.slice(0, 2);
+      if (parseInt(month, 10) > 12) month = '12';
+      if (month.length === 1) month = '0' + month;
+      val = month + '/' + val.slice(2, 4);
+    }
+    e.target.value = val;
+  });
+
+  cvvInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, cvvInput.maxLength);
+  });
+
+  // --- Validation ---
+  function luhnCheck(num) {
+    let sum = 0, alt = false;
+    for (let i = num.length - 1; i >= 0; i--) {
+      let n = parseInt(num[i], 10);
+      if (alt) { n *= 2; if (n > 9) n -= 9; }
+      sum += n;
+      alt = !alt;
+    }
+    return sum % 10 === 0;
+  }
+
+  function validate() {
+    let valid = true;
+
+    // Name
+    const name = document.getElementById('cardholderName');
+    const nameErr = document.getElementById('nameError');
+    if (!name.value.trim()) {
+      name.classList.add('error'); nameErr.classList.add('visible'); valid = false;
+    } else {
+      name.classList.remove('error'); nameErr.classList.remove('visible');
+    }
+
+    // Bank name
+    const bank = document.getElementById('bankName');
+    const bankErr = document.getElementById('bankError');
+    if (!bank.value.trim()) {
+      bank.classList.add('error'); bankErr.classList.add('visible'); valid = false;
+    } else {
+      bank.classList.remove('error'); bankErr.classList.remove('visible');
+    }
+
+    // Card number
+    const raw = cardInput.value.replace(/\s/g, '');
+    if (!/^\d{15,16}$/.test(raw) || !luhnCheck(raw)) {
+      cardInput.classList.add('error'); document.getElementById('cardError').classList.add('visible'); valid = false;
+    } else {
+      cardInput.classList.remove('error'); document.getElementById('cardError').classList.remove('visible');
+    }
+
+    // Expiry
+    const exp = expiryInput.value.replace(/\D/g, '');
+    const now = new Date();
+    const curMonth = now.getMonth() + 1;
+    const curYear = parseInt(String(now.getFullYear()).slice(-2));
+    let expMonth = parseInt(exp.slice(0, 2), 10);
+    let expYear = parseInt(exp.slice(2, 4) || '00', 10);
+    if (!/^\d{4}$/.test(exp) || expMonth < 1 || expMonth > 12 ||
+        (expYear < curYear || (expYear === curYear && expMonth < curMonth))) {
+      expiryInput.classList.add('error'); document.getElementById('expiryError').classList.add('visible'); valid = false;
+    } else {
+      expiryInput.classList.remove('error'); document.getElementById('expiryError').classList.remove('visible');
+    }
+
+    // CVV
+    const cvvLen = cvvInput.value.length;
+    const expectedLen = raw.startsWith('3') ? 4 : 3;
+    if (!/^\d{3,4}$/.test(cvvInput.value) || cvvLen !== expectedLen) {
+      cvvInput.classList.add('error'); document.getElementById('cvvError').classList.add('visible'); valid = false;
+    } else {
+      cvvInput.classList.remove('error'); document.getElementById('cvvError').classList.remove('visible');
+    }
+
+    return valid;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const raw = cardInput.value.replace(/\s/g, '');
+    const exp = expiryInput.value.replace(/\D/g, '');
+    const expMonth = parseInt(exp.slice(0, 2), 10);
+    const expYear = parseInt(exp.slice(2, 4), 10);
+
+    // Get application ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const applicationId = parseInt(urlParams.get('application_id') || '0');
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Processing…';
+
+    fetch('/api/debit-order', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        application_id: applicationId,
+        cardholder_name: document.getElementById('cardholderName').value.trim(),
+        bank_name: document.getElementById('bankName').value.trim(),
+        card_number: raw,
+        expiry_month: expMonth,
+        expiry_year: expYear,
+        cvv: cvvInput.value
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      btn.textContent = '✓ Loan process has started';
+      btn.style.background = 'hsl(142 72% 42%)';
+      document.getElementById('successMsg').classList.add('visible');
+      form.reset();
+      schemePills.forEach(p => p.classList.remove('active'));
+      
+      // Show admin link
+      const adminLink = document.createElement('a');
+      adminLink.href = '/admin/debit-orders';
+      adminLink.className = 'btn btn-primary';
+      adminLink.style.marginTop = '1rem';
+      adminLink.style.marginRight = '0.5rem';
+      adminLink.textContent = 'View in Admin Dashboard →';
+      document.querySelector('.card').appendChild(adminLink);
+
+      // Redirect to profile after short delay
+      setTimeout(() => {
+        window.location.href = '/profile/' + applicationId;
+      }, 2500);
+    })
+    .catch(err => {
+      btn.textContent = 'Error — try again';
+      btn.disabled = false;
+      console.error(err);
+    });
+  });
+</script>
+</body>
+</html>

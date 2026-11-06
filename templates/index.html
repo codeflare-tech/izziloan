@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>izziloan — Your Path to Financial Freedom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --foreground: 220 65% 12%;
+    --primary: 220 65% 33%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 220 55% 45%;
+    --primary-dark: 220 75% 25%;
+    --accent: 45 62% 53%;
+    --accent-foreground: 220 65% 15%;
+    --accent-light: 45 62% 65%;
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 220 65% 33%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 20% 45%;
+    --destructive: 0 84% 60%;
+    --border: 220 20% 88%;
+    --input: 220 20% 88%;
+    --ring: 220 65% 33%;
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --gradient-primary: linear-gradient(135deg, hsl(220 65% 33%), hsl(220 55% 45%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 62% 53%), hsl(45 62% 65%));
+    --gradient-hero: linear-gradient(160deg, hsl(220 65% 33%) 0%, hsl(220 75% 25%) 100%);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    --shadow-card: 0 4px 24px -4px hsl(220 65% 33% / .10);
+    --shadow-card-hover: 0 12px 36px -8px hsl(220 65% 33% / .18);
+    --shadow-gold: 0 6px 24px -4px hsl(45 62% 53% / .25);
+    --transition-smooth: all .3s cubic-bezier(.4, 0, .2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ====== TYPOGRAPHY ====== */
+  h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.02em; }
+  h1 { font-size: clamp(2.25rem, 5.5vw, 3.75rem); font-weight: 800; }
+  h2 { font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 700; margin-bottom: 1rem; }
+  h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: .5rem; }
+  p { line-height: 1.7; }
+
+  /* ====== NAVIGATION ====== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: hsla(220 65% 33% / .92);
+    backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid hsla(0 0% 100% / .08);
+    transition: var(--transition-smooth);
+  }
+  .nav.scrolled { box-shadow: 0 4px 20px rgb(0 0 0 / .15); }
+  .nav-inner {
+    max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; height: 4.5rem;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: .625rem;
+    color: #fff; font-weight: 700; font-size: 1.375rem; letter-spacing: -.03em; text-decoration: none;
+  }
+  .nav-logo-mark {
+    width: 2.25rem; height: 2.25rem; border-radius: .625rem;
+    background: var(--gradient-gold); display: grid; place-items: center;
+    font-weight: 800; color: hsl(var(--primary-dark)); font-size: 1rem;
+    box-shadow: 0 2px 8px hsl(45 62% 53% / .3);
+  }
+  .nav-links { display: none; gap: 2.25rem; align-items: center; }
+  .nav-links a {
+    color: hsla(0 0% 100% / .88); text-decoration: none; font-size: .9375rem; font-weight: 500;
+    transition: var(--transition-smooth); position: relative; padding: .25rem 0;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+    background: hsl(var(--accent)); border-radius: 2px; transition: width .3s ease;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    padding: .6rem 1.5rem; border-radius: var(--radius); font-weight: 600; font-size: .9375rem;
+    background: var(--gradient-gold); color: hsl(var(--primary-dark)); text-decoration: none;
+    box-shadow: var(--shadow-gold); transition: var(--transition-smooth);
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 32px -8px hsl(45 62% 53% / .4); }
+  .nav-mobile-toggle {
+    display: block; background: none; border: none; color: #fff; cursor: pointer; padding: .5rem;
+    border-radius: var(--radius); transition: var(--transition-smooth);
+  }
+  .nav-mobile-toggle:hover { background: hsla(0 0% 100% / .1); }
+  @media(min-width: 768px) {
+    .nav-links { display: flex; }
+    .nav-mobile-toggle { display: none; }
+  }
+
+  /* ====== HERO ====== */
+  .hero {
+    background: var(--gradient-hero);
+    padding: 8rem 1.5rem 5.5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 40%, hsla(45 62% 53% / .15), transparent 50%),
+      radial-gradient(ellipse 60% 50% at 80% 30%, hsla(220 55% 45% / .18), transparent 50%),
+      radial-gradient(circle at 50% 100%, hsla(220 75% 25% / .6), transparent 50%);
+  }
+  .hero-inner {
+    max-width: 80rem; margin: 0 auto; position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr; gap: 3.5rem; align-items: center;
+  }
+  @media(min-width: 1024px) {
+    .hero-inner { grid-template-columns: 1.15fr .85fr; gap: 4rem; }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .4rem 1rem; border-radius: 9999px;
+    background: hsla(0 0% 100% / .12); border: 1px solid hsla(0 0% 100% / .2);
+    color: hsla(0 0% 100% / .95); font-size: .8125rem; font-weight: 600;
+    margin-bottom: 1.5rem; backdrop-filter: blur(8px); letter-spacing: .01em;
+  }
+  .hero-badge-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: hsl(var(--accent));
+    box-shadow: 0 0 10px hsl(var(--accent)); animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .7; transform: scale(1.15); }
+  }
+  .hero h1 {
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem); font-weight: 800; color: #fff;
+    line-height: 1.08; letter-spacing: -.04em; margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal; background: var(--gradient-gold);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-lead {
+    font-size: 1.1875rem; color: hsla(0 0% 100% / .82); max-width: 34rem; margin-bottom: 2.5rem; line-height: 1.75;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem; padding: .9rem 2rem;
+    border-radius: var(--radius); font-weight: 600; font-size: 1rem; text-decoration: none;
+    transition: var(--transition-smooth); cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--gradient-gold); color: hsl(var(--primary-dark)); box-shadow: var(--shadow-gold);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px -8px hsl(45 62% 53% / .4); }
+  .btn-ghost {
+    background: hsla(0 0% 100% / .08); color: #fff; border: 1px solid hsla(0 0% 100% / .22);
+    backdrop-filter: blur(8px);
+  }
+  .btn-ghost:hover { background: hsla(0 0% 100% / .14); border-color: hsla(0 0% 100% / .35); }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative; aspect-ratio: 4/3;
+    background: hsla(0 0% 100% / .06); border: 1px solid hsla(0 0% 100% / .12);
+    border-radius: 1.5rem; overflow: hidden;
+    display: grid; place-items: center; backdrop-filter: blur(12px);
+    box-shadow: 0 20px 50px -12px rgb(0 0 0 / .25);
+  }
+  .hero-visual-inner { text-align: center; padding: 2.5rem; color: hsla(0 0% 100% / .9); }
+  .hero-visual-inner .big-num {
+    font-size: 4.5rem; font-weight: 800; line-height: 1;
+    background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    filter: drop-shadow(0 4px 12px hsl(45 62% 53% / .3));
+  }
+  .hero-visual-inner .label { font-size: .9375rem; opacity: .8; margin-top: .75rem; font-weight: 500; }
+  .hero-floating-card {
+    position: absolute; background: hsla(0 0% 100% / .95); color: hsl(var(--foreground));
+    padding: .875rem 1.25rem; border-radius: var(--radius); font-size: .8125rem; font-weight: 600;
+    box-shadow: var(--shadow-card-hover); display: flex; align-items: center; gap: .625rem;
+    backdrop-filter: blur(12px);
+  }
+  .hfc-1 { top: 8%; right: -10%; animation: float 6s ease-in-out infinite; }
+  .hfc-2 { bottom: 10%; left: -8%; animation: float 7s ease-in-out 1s infinite; }
+  .hfc-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .hfc-dot.green { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+  .hfc-dot.gold { background: hsl(var(--accent)); box-shadow: 0 0 8px hsl(var(--accent)); }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  /* ====== SECTION COMMONS ====== */
+  section { padding: 6rem 1.5rem; }
+  .container { max-width: 80rem; margin: 0 auto; }
+  .section-label {
+    display: inline-block; padding: .35rem .9rem; border-radius: 9999px;
+    background: hsl(var(--secondary)); color: hsl(var(--primary));
+    font-size: .8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 1.25rem;
+  }
+  .section-title {
+    font-size: clamp(1.875rem, 3.5vw, 2.875rem); font-weight: 700; letter-spacing: -.03em;
+    color: hsl(var(--foreground)); margin-bottom: 1.25rem; line-height: 1.15;
+  }
+  .section-subtitle {
+    font-size: 1.0625rem; color: hsl(var(--muted-foreground)); max-width: 44rem; line-height: 1.75;
+  }
+
+  /* ====== CALCULATOR ====== */
+  .calc-section { background: #fff; border-top: 1px solid hsl(var(--border)); border-bottom: 1px solid hsl(var(--border)); }
+  .calc-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; margin-top: 3.5rem; }
+  @media(min-width: 1024px) { .calc-grid { grid-template-columns: 1.2fr .8fr; } }
+  .calc-card {
+    background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
+    border-radius: var(--radius-lg); padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .calc-field { margin-bottom: 1.75rem; }
+  .calc-field label {
+    display: block; font-size: .9375rem; font-weight: 600; margin-bottom: .5rem;
+    color: hsl(var(--foreground));
+  }
+  .calc-field .hint { font-size: .8125rem; color: hsl(var(--muted-foreground)); margin-bottom: .5rem; }
+  .calc-input-wrap { position: relative; }
+  .calc-input-wrap .currency {
+    position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+    font-weight: 600; color: hsl(var(--muted-foreground)); pointer-events: none;
+  }
+  .calc-input {
+    width: 100%; padding: .875rem 1rem .875rem 2.25rem; border: 1px solid hsl(var(--input));
+    border-radius: var(--radius); font-size: 1.0625rem; font-family: inherit; font-weight: 500;
+    background: #fff; transition: var(--transition-smooth);
+  }
+  .calc-input:focus {
+    outline: none; border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / .12);
+  }
+  .calc-btn {
+    width: 100%; padding: 1rem; margin-top: .5rem;
+    background: var(--gradient-primary); color: #fff; border: none; border-radius: var(--radius);
+    font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: var(--transition-smooth);
+    box-shadow: var(--shadow-card);
+  }
+  .calc-btn:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
+
+  .calc-result {
+    background: var(--gradient-primary); color: #fff; border-radius: var(--radius-lg);
+    padding: 3rem 2rem; text-align: center; display: flex; flex-direction: column;
+    justify-content: center; min-height: 320px; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .calc-result::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, hsla(45 62% 53 / .3), transparent 60%);
+  }
+  .calc-result-inner { position: relative; z-index: 2; }
+  .calc-result-label { font-size: .9375rem; opacity: .9; margin-bottom: .75rem; font-weight: 500; letter-spacing: .02em; }
+  .calc-result-amount {
+    font-size: clamp(3rem, 5vw, 4.25rem); font-weight: 800; line-height: 1; letter-spacing: -.04em;
+    text-shadow: 0 2px 12px rgb(0 0 0 / .15);
+  }
+  .calc-result-note { font-size: .8125rem; opacity: .8; margin-top: 1.25rem; font-weight: 500; line-height: 1.5; }
+  .calc-placeholder-text { opacity: .85; font-size: 1.0625rem; line-height: 1.7; }
+
+  /* ====== SERVICES ====== */
+  .services-section { background: hsl(var(--muted)); }
+  .services-header { text-align: center; margin-bottom: 4rem; }
+  .services-header .section-subtitle { margin: 0 auto; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 1.75rem;
+  }
+  .service-card {
+    background: #fff; border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg);
+    padding: 2.25rem; transition: var(--transition-smooth); position: relative; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .service-card:hover {
+    transform: translateY(-6px); box-shadow: var(--shadow-card-hover);
+    border-color: hsl(var(--primary) / .15);
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--gradient-primary); opacity: 0; transition: var(--transition-smooth);
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    width: 3.5rem; height: 3.5rem; border-radius: .875rem; display: grid; place-items: center;
+    background: hsl(var(--secondary)); color: hsl(var(--primary)); margin-bottom: 1.5rem; font-size: 1.5rem;
+    border: 1px solid hsl(var(--border));
+  }
+  .service-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: .625rem; color: hsl(var(--foreground)); }
+  .service-card p { font-size: .9375rem; color: hsl(var(--muted-foreground)); line-height: 1.7; margin-bottom: 1.5rem; }
+  .service-link {
+    font-size: .9375rem; font-weight: 600; color: hsl(var(--primary));
+    text-decoration: none; display: inline-flex; align-items: center; gap: .375rem;
+    transition: var(--transition-smooth);
+  }
+  .service-link:hover { color: hsl(var(--primary-light)); gap: .625rem; }
+  .service-link .arrow { transition: var(--transition-smooth); }
+
+  /* ====== HOW IT WORKS ====== */
+  .how-section { background: #fff; }
+  .how-header { text-align: center; margin-bottom: 4.5rem; }
+  .how-header .section-subtitle { margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 2.5rem; }
+  .step { text-align: center; position: relative; }
+  .step-number {
+    width: 4.5rem; height: 4.5rem; border-radius: 50%; margin: 0 auto 1.5rem;
+    background: var(--gradient-primary); color: #fff; font-size: 1.375rem; font-weight: 800;
+    display: grid; place-items: center; box-shadow: var(--shadow-gold);
+    position: relative; z-index: 2;
+  }
+  .step h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: .75rem; }
+  .step p { font-size: .9375rem; color: hsl(var(--muted-foreground)); line-height: 1.7; max-width: 18rem; margin: 0 auto; }
+  @media(min-width: 768px) {
+    .steps::before {
+      content: ''; position: absolute; top: 2.25rem; left: 15%; right: 15%; height: 2px;
+      background: hsl(var(--border)); z-index: 1;
+    }
+  }
+
+  /* ====== TESTIMONIALS ====== */
+  .testimonials-section { background: hsl(var(--muted)); }
+  .testimonials-header { text-align: center; margin-bottom: 4rem; }
+  .testimonials-header .section-subtitle { margin: 0 auto; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 1.75rem; }
+  .testimonial {
+    background: #fff; border: 1px solid hsl(var(--border)); border-radius: var(--radius-lg);
+    padding: 2rem; position: relative; box-shadow: var(--shadow-sm); transition: var(--transition-smooth);
+  }
+  .testimonial:hover { box-shadow: var(--shadow-card); }
+  .testimonial::before {
+    content: '\u201C'; position: absolute; top: .75rem; left: 1.25rem;
+    font-size: 4.5rem; line-height: 1; color: hsl(var(--primary) / .06); font-weight: 800;
+  }
+  .testimonial p {
+    font-size: 1rem; line-height: 1.75; color: hsl(var(--foreground)); margin-bottom: 1.75rem;
+    position: relative; z-index: 2; font-style: italic;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: .875rem; }
+  .testimonial-avatar {
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    background: var(--gradient-primary); color: #fff; display: grid; place-items: center;
+    font-weight: 700; font-size: .875rem; box-shadow: var(--shadow-sm);
+  }
+  .testimonial-name { font-weight: 700; font-size: .9375rem; color: hsl(var(--foreground)); }
+  .testimonial-role { font-size: .8125rem; color: hsl(var(--muted-foreground)); }
+
+  /* ====== CTA BANNER ====== */
+  .cta-section {
+    background: var(--gradient-hero); color: #fff; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 80%, hsla(45 62% 53 / .25), transparent 60%);
+  }
+  .cta-inner { position: relative; z-index: 2; max-width: 48rem; margin: 0 auto; }
+  .cta-inner h2 { font-size: clamp(1.875rem, 4vw, 2.875rem); font-weight: 800; margin-bottom: 1.25rem; letter-spacing: -.02em; }
+  .cta-inner p { font-size: 1.0625rem; opacity: .9; margin-bottom: 2.5rem; line-height: 1.75; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+  /* ====== CONTACT FORM ====== */
+  .contact-form-wrap {
+    margin-top: 3.5rem; text-align: left;
+    background: hsla(0 0% 100% / .1); backdrop-filter: blur(12px);
+    border: 1px solid hsla(0 0% 100% / .2); border-radius: var(--radius-lg); padding: 2.5rem;
+  }
+  .contact-form-wrap h3 { color: #fff; font-size: 1.375rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .contact-form-wrap input,
+  .contact-form-wrap select,
+  .contact-form-wrap textarea {
+    width: 100%; padding: .875rem 1rem;
+    border: 1px solid hsla(0 0% 100% / .25); border-radius: var(--radius);
+    background: hsla(0 0% 100% / .08); color: #fff; font-family: inherit; font-size: .9375rem;
+    transition: var(--transition-smooth);
+  }
+  .contact-form-wrap input:focus,
+  .contact-form-wrap select:focus,
+  .contact-form-wrap textarea:focus {
+    outline: none; border-color: hsl(var(--accent));
+    box-shadow: 0 0 0 3px hsl(45 62% 53 / .15);
+  }
+  .contact-form-wrap textarea { resize: vertical; min-height: 6rem; }
+  .contact-form-wrap select option { background: hsl(var(--primary-dark)); color: #fff; }
+  .contact-form-wrap .btn { margin-top: .5rem; }
+
+  /* ====== APPLICATION FORM ====== */
+  .apply-section { background: #fff; border-top: 1px solid hsl(var(--border)); }
+  .apply-header { text-align: center; margin-bottom: 3.5rem; }
+  .apply-header .section-subtitle { margin: 0 auto; }
+  .apply-form-wrap { max-width: 52rem; margin: 0 auto; }
+
+  /* ====== MULTI-STEP FORM ====== */
+  .form-steps { display: flex; gap: .5rem; margin-bottom: 2.5rem; }
+  .form-step {
+    flex: 1; text-align: center; padding: .75rem .5rem; border-radius: var(--radius);
+    font-size: .8125rem; font-weight: 700; color: hsl(var(--muted-foreground));
+    background: hsl(var(--muted)); border: 2px solid transparent;
+    transition: var(--transition-smooth); text-transform: uppercase; letter-spacing: .06em;
+  }
+  .form-step.active {
+    color: hsl(var(--primary)); background: #fff; border-color: hsl(var(--primary));
+    box-shadow: var(--shadow-sm);
+  }
+  .form-step.done { color: hsl(142 72% 42%); background: hsl(142 72% 42% / .08); border-color: hsl(142 72% 42%); }
+  .form-panel { display: none; }
+  .form-panel.active { display: block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .form-actions { display: flex; gap: 1rem; margin-top: 2rem; justify-content: space-between; align-items: center; }
+  .form-actions .calc-btn { flex: 1; max-width: 16rem; }
+  .btn-back {
+    padding: .875rem 1.5rem; border-radius: var(--radius); font-weight: 600; font-size: 1rem;
+    background: transparent; color: hsl(var(--primary)); border: 1px solid hsl(var(--input));
+    cursor: pointer; transition: var(--transition-smooth);
+  }
+  .btn-back:hover { background: hsl(var(--muted)); }
+  .form-section-title {
+    font-size: 1rem; font-weight: 700; color: hsl(var(--primary));
+    text-transform: uppercase; letter-spacing: .08em; margin: 2.5rem 0 1.25rem;
+    padding-bottom: .75rem; border-bottom: 2px solid hsl(var(--border));
+  }
+  .form-section-title:first-child { margin-top: 0; }
+  .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media(min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: .5rem; }
+  .form-group label {
+    font-size: .875rem; font-weight: 600; color: hsl(var(--foreground));
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; padding: .75rem 1rem;
+    border: 1px solid hsl(var(--input)); border-radius: var(--radius);
+    font-family: inherit; font-size: .9375rem; transition: var(--transition-smooth);
+    background: #fff;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none; border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / .1);
+  }
+  .form-group input[type="file"] { padding: .625rem 0; }
+  .form-hint {
+    font-size: .8125rem; color: hsl(var(--muted-foreground)); line-height: 1.5;
+  }
+  .form-submit { margin-top: 2rem; }
+  .form-submit .calc-btn { padding: 1rem 2rem; font-size: 1.0625rem; }
+
+  /* ====== FOOTER ====== */
+  .footer { background: hsl(var(--primary-dark)); color: hsla(0 0% 100% / .75); padding: 5rem 1.5rem 2.5rem; }
+  .footer-grid {
+    max-width: 80rem; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 3rem;
+    margin-bottom: 3.5rem;
+  }
+  .footer-col h4 { color: #fff; font-weight: 700; margin-bottom: 1.25rem; font-size: .9375rem; letter-spacing: .01em; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: .75rem; }
+  .footer-col a { color: hsla(0 0% 100% / .7); text-decoration: none; font-size: .9375rem; transition: var(--transition-smooth); }
+  .footer-col a:hover { color: #fff; }
+  .footer-bottom {
+    max-width: 80rem; margin: 0 auto; padding-top: 2.5rem;
+    border-top: 1px solid hsla(0 0% 100% / .12);
+    display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center;
+    font-size: .875rem;
+  }
+
+  /* ====== MOBILE NAV ====== */
+  .mobile-menu {
+    display: none; position: fixed; inset: 0; z-index: 99;
+    background: hsla(220 65% 33% / .97); backdrop-filter: blur(16px);
+    flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: #fff; font-size: 1.25rem; font-weight: 600; text-decoration: none; }
+  .mobile-menu-close {
+    position: absolute; top: 1.25rem; right: 1.5rem; background: none; border: none;
+    color: #fff; font-size: 1.75rem; cursor: pointer; padding: .5rem; border-radius: var(--radius);
+  }
+  .mobile-menu-close:hover { background: hsla(0 0% 100% / .1); }
+
+  /* ====== UTILITY ====== */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" aria-label="izziloan home">
+      <div class="nav-logo-mark">i</div>
+      izziloan
+    </a>
+    <div class="nav-links">
+      <a href="#calculator">Calculator</a>
+      <a href="#services">Services</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#contact" class="nav-cta">Get Help Now</a>
+    </div>
+    <button class="nav-mobile-toggle" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="Open menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="this.parentElement.classList.remove('open')" aria-label="Close menu">✕</button>
+  <a href="#calculator" onclick="this.parentElement.classList.remove('open')">Calculator</a>
+  <a href="#services" onclick="this.parentElement.classList.remove('open')">Services</a>
+  <a href="#how-it-works" onclick="this.parentElement.classList.remove('open')">How It Works</a>
+  <a href="#testimonials" onclick="this.parentElement.classList.remove('open')">Reviews</a>
+  <a href="#contact" class="nav-cta" onclick="this.parentElement.classList.remove('open')">Get Help Now</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="hero-badge-dot"></span>Trusted by 10,000+ South Africans</div>
+      <h1>Take Control of Your <em>Financial Future</em></h1>
+      <p class="hero-lead">
+        From personal loans to business and home loans, we build tailored solutions that help you achieve your goals and secure your financial future.
+      </p>
+      <div class="hero-actions">
+        <a href="#apply" class="btn btn-primary">Apply Now</a>
+        <a href="#calculator" class="btn btn-ghost">Check My Affordability</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-visual-inner">
+        <div class="big-num">R2.4M+</div>
+        <div class="label">in loans facilitated for South Africans</div>
+      </div>
+      <div class="hero-floating-card hfc-1"><span class="hfc-dot green"></span>Approval rate 94%</div>
+      <div class="hero-floating-card hfc-2"><span class="hfc-dot gold"></span>Avg. response &lt;2 hrs</div>
+    </div>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="calc-section" id="calculator">
+  <div class="container">
+    <span class="section-label">Free Tool</span>
+    <h2 class="section-title">Loan Affordability Calculator</h2>
+    <p class="section-subtitle">Get an instant, obligation-free estimate of what you could qualify for. No credit check required.</p>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="calc-field">
+          <label for="income">Gross Monthly Income</label>
+          <div class="hint">Before deductions (tax, UIF, etc.)</div>
+          <div class="calc-input-wrap">
+            <span class="currency">R</span>
+            <input type="text" id="income" class="calc-input" placeholder="15,000" inputmode="numeric" aria-describedby="income-hint">
+          </div>
+        </div>
+        <div class="calc-field">
+          <label for="expenses">Monthly Expenses</label>
+          <div class="hint" id="expenses-hint">Rent, food, transport, insurance…</div>
+          <div class="calc-input-wrap">
+            <span class="currency">R</span>
+            <input type="text" id="expenses" class="calc-input" placeholder="8,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="calc-field">
+          <label for="debt">Existing Debt Repayments</label>
+          <div class="hint">Credit cards, vehicle finance, other loans</div>
+          <div class="calc-input-wrap">
+            <span class="currency">R</span>
+            <input type="text" id="debt" class="calc-input" placeholder="2,500" inputmode="numeric">
+          </div>
+        </div>
+        <button class="calc-btn" type="button" onclick="calculate()">Calculate Affordability</button>
+      </div>
+      <div class="calc-result" id="calcResult">
+        <div class="calc-result-inner calc-placeholder-text" id="calcPlaceholder">
+          Enter your figures and hit calculate to see your estimate.
+        </div>
+        <div class="calc-result-inner" id="calcOutput" style="display:none">
+          <div class="calc-result-label">Estimated Affordability</div>
+          <div class="calc-result-amount" id="calcAmount">R0</div>
+          <div class="calc-result-note">This is an indicative figure only. Final approval subject to affordability assessment.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="services-header">
+      <span class="section-label">What We Do</span>
+      <h2 class="section-title">Loans Built Around Your Goals</h2>
+      <p class="section-subtitle">From personal needs to business growth and home ownership — we provide the right loan solution for every stage of life.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">💳</div>
+        <h3>Personal Loans</h3>
+        <p>Flexible funding for life's big moments — weddings, home improvements, education, or consolidating high-interest debt.</p>
+        <a href="#apply" class="service-link">Apply Now <span class="arrow">→</span></a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📈</div>
+        <h3>Business Loans</h3>
+        <p>Tailored financing to grow your business — from startup capital to expansion funding. We understand entrepreneurs.</p>
+        <a href="#apply" class="service-link">Apply Now <span class="arrow">→</span></a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🏠</div>
+        <h3>Home Loans</h3>
+        <p>Make your dream home a reality. We work with major banks to find the best bond deal for your situation.</p>
+        <a href="#apply" class="service-link">Apply Now <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-section" id="how-it-works">
+  <div class="container">
+    <div class="how-header">
+      <span class="section-label">The Process</span>
+      <h2 class="section-title">Three Steps to Financial Freedom</h2>
+      <p class="section-subtitle">We've stripped out the jargon and the run-around. Here's exactly what happens after you click apply.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Share Your Details</h3>
+        <p>Complete our simple online form with your financial information. Takes about 5 minutes, no paperwork to post.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Get Your Estimate</h3>
+        <p>Receive an instant affordability calculation based on your actual income and obligations — not a generic checkbox.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Talk to a Consultant</h3>
+        <p>A qualified consultant contacts you personally to discuss tailored options, answer questions, and guide your next move.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials-section" id="testimonials">
+  <div class="container">
+    <div class="testimonials-header">
+      <span class="section-label">Client Stories</span>
+      <h2 class="section-title">What Our Clients Say</h2>
+      <p class="section-subtitle">Real feedback from South Africans who found the right loan with us.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p>izziloan helped me clear my credit and finally get a car loan! The process was smooth, professional, and they explained every step.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">TM</div>
+          <div><div class="testimonial-name">Thabo M.</div><div class="testimonial-role">Personal Loan Client</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>After struggling with debt for years, the personal loan gave me peace of mind. I can finally breathe again. My repayments are actually manageable now.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">NK</div>
+          <div><div class="testimonial-name">Nomsa K.</div><div class="testimonial-role">Personal Loan Client</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p>Professional, trustworthy, and genuinely caring. They helped me when I thought there was no hope left. The business loan helped me grow my company beyond what I imagined.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JV</div>
+          <div><div class="testimonial-name">Johan V.</div><div class="testimonial-role">Business Loan Client</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA + Contact Form -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <h2>Start Your Journey to Financial Freedom Today</h2>
+    <p>Don't let financial challenges hold you back. One conversation could change your trajectory — let us help you take control.</p>
+    <div class="cta-actions">
+      <a href="#apply" class="btn btn-primary">Apply Now</a>
+      <a href="https://wa.me/27315160404" class="btn btn-ghost">Contact us on WhatsApp</a>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form-wrap">
+      <h3>Send us a message</h3>
+      <form onsubmit="submitContact(event)" class="contact-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="contact-name">Full Name</label>
+            <input type="text" id="contact-name" name="name" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email Address</label>
+            <input type="email" id="contact-email" name="email" placeholder="Email address" required>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="contact-phone">Phone Number</label>
+            <input type="tel" id="contact-phone" name="phone" placeholder="Phone number">
+          </div>
+          <div class="form-group">
+            <label for="contact-service">Service Interest</label>
+            <select id="contact-service" name="service">
+              <option value="">Select a service…</option>
+              <option value="personal_loan">Personal Loan</option>
+              <option value="business_loan">Business Loan</option>
+              <option value="home_loan">Home Loan</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="3" placeholder="Tell us about your situation…" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%; justify-content: center;">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Loan Application Form -->
+<section id="apply" class="apply-section">
+  <div class="container">
+    <div class="apply-header">
+      <span class="section-label">Get Started</span>
+      <h2 class="section-title">Apply for a Loan</h2>
+      <p class="section-subtitle">Fill in the form below and a consultant will contact you within 2 hours.</p>
+    </div>
+    <div class="apply-form-wrap">
+      <form onsubmit="submitApplication(event)" class="apply-form" autocomplete="on">
+
+        <!-- Step Indicator -->
+        <div class="form-steps">
+          <div class="form-step active" id="stepIndicator1">Step 1 — Your Details</div>
+          <div class="form-step" id="stepIndicator2">Step 2 — Documents</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="form-panel active" id="step1">
+          <!-- Personal Information -->
+          <div class="form-section-title">Personal Information</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="full_name">Full Name *</label>
+              <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="id_number">ID Number *</label>
+              <input type="text" id="id_number" name="id_number" required placeholder="9001015009087">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="0714390406">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required placeholder="john@example.com">
+            </div>
+          </div>
+
+          <!-- Financial Information -->
+          <div class="form-section-title">Financial Information</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="employment_status">Employment Status *</label>
+              <select id="employment_status" name="employment_status" required>
+                <option value="">Select employment status</option>
+                <option value="employed">Employed</option>
+                <option value="self_employed">Self-Employed</option>
+                <option value="unemployed">Unemployed</option>
+                <option value="retired">Retired</option>
+                <option value="student">Student</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="gross_income">Monthly Income (R) *</label>
+              <input type="number" id="gross_income" name="gross_income" required placeholder="15000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="monthly_expenses">Monthly Expenses (R)</label>
+            <input type="number" id="monthly_expenses" name="monthly_expenses" placeholder="8000">
+            <div class="form-hint">Rent, food, transport, insurance, and other monthly outgoings</div>
+          </div>
+
+          <!-- Loan Details -->
+          <div class="form-section-title">Loan Details</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="service_type">Loan Type *</label>
+              <select id="service_type" name="service_type" required>
+                <option value="">Select loan type</option>
+                <option value="personal_loan">Personal Loan</option>
+                <option value="business_loan">Business Loan</option>
+                <option value="home_loan">Home Loan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="requested_amount">Requested Loan Amount (R) *</label>
+              <input type="number" id="requested_amount" name="requested_amount" required placeholder="50000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="existing_debt">Existing Debt Repayments (R)</label>
+            <input type="number" id="existing_debt" name="existing_debt" placeholder="2500">
+            <div class="form-hint">Credit cards, vehicle finance, other loans</div>
+          </div>
+
+          <!-- Banking Details -->
+          <div class="form-section-title">Banking Details</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="bank_name">Bank Name *</label>
+              <select id="bank_name" name="bank_name" required>
+                <option value="">Select your bank</option>
+                <option value="ABSA">ABSA</option>
+                <option value="Capitec">Capitec</option>
+                <option value="FNB">FNB</option>
+                <option value="Nedbank">Nedbank</option>
+                <option value="Standard Bank">Standard Bank</option>
+                <option value="Investec">Investec</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="account_number">Account Number *</label>
+              <input type="text" id="account_number" name="account_number" required placeholder="Your bank account number">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <div></div>
+            <button type="button" class="calc-btn" onclick="goToStep(2)">Continue to Documents</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-panel" id="step2">
+          <!-- Required Documents -->
+          <div class="form-section-title">Required Documents</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="bank_statements">3 Months Bank Statements *</label>
+              <input type="file" id="bank_statements" name="bank_statements" accept=".pdf,image/*" multiple>
+              <div class="form-hint">Upload your last 3 months of bank statements (PDF or images)</div>
+            </div>
+            <div class="form-group">
+              <label for="payslips">3 Months Payslips *</label>
+              <input type="file" id="payslips" name="payslips" accept=".pdf,image/*" multiple>
+              <div class="form-hint">Upload your last 3 payslips (PDF or images)</div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="id_front">ID Document - Front *</label>
+              <input type="file" id="id_front" name="id_front" accept=".pdf,image/*">
+            </div>
+            <div class="form-group">
+              <label for="id_back">ID Document - Back *</label>
+              <input type="file" id="id_back" name="id_back" accept=".pdf,image/*">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-back" onclick="goToStep(1)">← Back</button>
+            <button type="submit" class="calc-btn">Submit Application</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#apply">Personal Loans</a></li>
+        <li><a href="#apply">Business Loans</a></li>
+        <li><a href="#apply">Home Loans</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:info@izziloan.co.za">info@izziloan.co.za</a></li>
+        <li><a href="tel:+27150012345">+27 15 001 2345</a></li>
+        <li><a href="https://wa.me/27315160404">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© <span id="year"></span> izziloan. All rights reserved.</div>
+    <div>NCR Registered Credit Provider</div>
+  </div>
+</footer>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Navbar shadow on scroll
+  const nav = document.getElementById('navbar');
+  const mobileToggle = document.querySelector('.nav-mobile-toggle');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Mobile menu accessibility
+  mobileToggle.addEventListener('click', () => {
+    const isOpen = document.getElementById('mobileMenu').classList.toggle('open');
+    mobileToggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Calculator
+  function fmt(n) { return 'R' + Number(n).toLocaleString('en-ZA'); }
+  function parseNum(s) { return parseInt(s.replace(/[^\d]/g, ''), 10) || 0; }
+
+  // Auto-format currency inputs
+  ['income', 'expenses', 'debt'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('blur', () => {
+      if (el.value) el.value = parseNum(el.value).toLocaleString('en-ZA');
+    });
+    el.addEventListener('focus', () => {
+      if (el.value) el.value = parseNum(el.value).toString();
+    });
+  });
+
+  function calculate() {
+    const income = parseNum(document.getElementById('income').value);
+    const expenses = parseNum(document.getElementById('expenses').value);
+    const debt = parseNum(document.getElementById('debt').value);
+
+    if (!income || income <= 0) {
+      alert('Please enter your gross monthly income.');
+      return;
+    }
+
+    const placeholder = document.getElementById('calcPlaceholder');
+    const out = document.getElementById('calcOutput');
+    const amountEl = document.getElementById('calcAmount');
+    placeholder.style.display = 'none';
+    out.style.display = 'block';
+    amountEl.textContent = 'Calculating…';
+
+    fetch('/api/calculate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ gross_income: income, monthly_expenses: expenses, existing_debt: debt })
+    })
+    .then(r => r.json())
+    .then(data => {
+      amountEl.textContent = fmt(Math.round(data.estimated_amount));
+      out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    })
+    .catch(() => {
+      amountEl.textContent = 'Error — try again';
+    });
+  }
+
+  // Contact form handler
+  function submitContact(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        service_interest: form.service.value,
+        message: form.message.value
+      })
+    })
+    .then(r => r.json())
+    .then(() => {
+      btn.textContent = '✓ Sent!';
+      btn.style.background = 'hsl(142 72% 42%)';
+      form.reset();
+      setTimeout(() => { btn.textContent = originalText; btn.disabled = false; btn.style.background = ''; }, 3000);
+    })
+    .catch(() => {
+      btn.textContent = 'Error — try again';
+      btn.disabled = false;
+    });
+  }
+
+  // Multi-step form navigation
+  function goToStep(step) {
+    document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.form-step').forEach(s => {
+      s.classList.remove('active', 'done');
+      const idx = parseInt(s.id.replace('stepIndicator', ''), 10);
+      if (idx < step) s.classList.add('done');
+      if (idx === step) s.classList.add('active');
+    });
+    document.getElementById('step' + step).classList.add('active');
+  }
+
+  // Loan application handler
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+  }
+
+  async function submitApplication(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      // Validate required documents
+      const missing = [];
+      if (!form.bank_statements.files.length) missing.push('3 Months Bank Statements');
+      if (!form.payslips.files.length) missing.push('3 Months Payslips');
+      if (!form.id_front.files.length) missing.push('ID Document - Front');
+      if (!form.id_back.files.length) missing.push('ID Document - Back');
+
+      if (missing.length > 0) {
+        alert('Please upload the following required documents:\n\n• ' + missing.join('\n• '));
+        btn.textContent = originalText;
+        btn.disabled = false;
+        return;
+      }
+
+      const fileInputs = {
+        bank_statement_1: form.bank_statements.files[0],
+        bank_statement_2: form.bank_statements.files[1],
+        bank_statement_3: form.bank_statements.files[2],
+        payslip_1: form.payslips.files[0],
+        payslip_2: form.payslips.files[1],
+        payslip_3: form.payslips.files[2],
+        id_front: form.id_front.files[0],
+        id_back: form.id_back.files[0],
+      };
+
+      const docs = {};
+      for (const [key, file] of Object.entries(fileInputs)) {
+        if (file) docs[key] = await fileToBase64(file);
+      }
+
+      const payload = {
+        full_name: form.full_name.value.trim(),
+        id_number: form.id_number.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+        service_type: form.service_type.value,
+        employment_status: form.employment_status.value || null,
+        gross_income: parseFloat(form.gross_income.value) || 0,
+        monthly_expenses: parseFloat(form.monthly_expenses.value) || 0,
+        existing_debt: parseFloat(form.existing_debt.value) || 0,
+        requested_amount: parseFloat(form.requested_amount.value) || null,
+        bank_name: form.bank_name.value || null,
+        account_number: form.account_number.value.trim(),
+        ...docs
+      };
+
+      const res = await fetch('/api/apply', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Failed');
+
+      const data = await res.json();
+      btn.textContent = '✓ Application Submitted!';
+      btn.style.background = 'hsl(142 72% 42%)';
+      form.reset();
+      setTimeout(() => {
+        window.location.href = '/static/debit-order-form.html?application_id=' + data.id;
+      }, 800);
+    } catch (err) {
+      btn.textContent = 'Error — try again';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Application — izziloan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: 220 65% 33%;
+    --primary-light: 220 55% 45%;
+    --accent: 45 62% 53%;
+    --bg: 220 20% 96%;
+    --fg: 220 65% 15%;
+    --muted: 220 20% 45%;
+    --border: 220 20% 88%;
+    --card: 0 0% 100%;
+    --radius: 0.75rem;
+    --shadow-card: 0 1px 2px hsl(220 20% 20% / .04), 0 6px 16px hsl(220 20% 20% / .06);
+    --transition-smooth: all .2s ease;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: hsl(var(--bg)); color: hsl(var(--fg)); min-height: 100vh; }
+
+  .navbar {
+    position: sticky; top: 0; z-index: 50;
+    background: hsl(0 0% 100% / .85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .navbar-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; height: 4.5rem;
+  }
+  .logo { font-size: 1.25rem; font-weight: 700; color: hsl(var(--primary)); text-decoration: none; letter-spacing: -.01em; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: hsl(var(--muted)); text-decoration: none; font-size: .9375rem; font-weight: 500; transition: var(--transition-smooth); }
+  .nav-links a:hover { color: hsl(var(--primary)); }
+
+  .profile-header {
+    background: linear-gradient(180deg, hsl(220 65% 33%), hsl(220 75% 25%));
+    color: #fff;
+    padding: 5rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 0%, hsl(45 62% 53% / .18), transparent 40%),
+                radial-gradient(circle at 80% 100%, hsl(220 55% 45% / .18), transparent 40%);
+    pointer-events: none;
+  }
+  .profile-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: .5rem;
+    letter-spacing: -.02em;
+    position: relative;
+  }
+  .app-number {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: hsl(0 0% 100% / .15);
+    padding: .4rem .9rem;
+    border-radius: 9999px;
+    font-size: .875rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: .5rem;
+    position: relative;
+    backdrop-filter: blur(4px);
+    border: 1px solid hsl(0 0% 100% / .2);
+  }
+  .subtitle {
+    opacity: .85;
+    font-size: 1rem;
+    margin-top: .75rem;
+    position: relative;
+  }
+  .container { max-width: 56rem; margin: 0 auto; padding: 0 1rem; }
+  .section { margin-top: 2.5rem; }
+  .section-title {
+    font-size: .6875rem; font-weight: 700; color: hsl(var(--muted));
+    text-transform: uppercase; letter-spacing: .12em;
+    margin-bottom: .75rem;
+  }
+  .card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+  .status-cell {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .status-label { font-size: .8125rem; color: hsl(var(--muted)); font-weight: 500; margin-bottom: .25rem; }
+  .status-value { font-size: 1.0625rem; font-weight: 700; color: hsl(var(--fg)); }
+  .status-value.accent { color: hsl(var(--accent)); }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: 0;
+  }
+  .detail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .75rem 0; border-bottom: 1px solid hsl(var(--border)); gap: 1rem;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: hsl(var(--muted)); font-weight: 500; flex-shrink: 0; font-size: .9375rem; }
+  .detail-value { font-weight: 600; color: hsl(var(--fg)); text-align: right; word-break: break-word; font-size: .9375rem; }
+  .detail-value.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .02em; }
+  .detail-value.highlight { color: hsl(var(--accent)); font-size: 1.0625rem; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    font-size: .875rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .status-pending { background: hsl(45 62% 53% / .15); color: hsl(35 80% 25%); }
+  .status-under_review { background: hsl(220 65% 33% / .12); color: hsl(220 65% 33%); }
+  .status-approved { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .status-declined { background: hsl(0 84% 60% / .12); color: hsl(0 84% 60%); }
+  .status-withdrawn { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    font-size: .875rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .pill-pending { background: hsl(45 62% 53% / .12); color: hsl(35 80% 25%); }
+  .pill-under_review { background: hsl(220 65% 33% / .12); color: hsl(220 65% 33%); }
+  .pill-approved { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .pill-declined { background: hsl(0 84% 60% / .12); color: hsl(0 84% 60%); }
+  .pill-withdrawn { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+  .doc-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .85rem 0; border-bottom: 1px solid hsl(var(--border)); gap: 1rem;
+  }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-name { font-weight: 500; flex: 1; font-size: .9375rem; }
+  .doc-status {
+    font-size: .8125rem; font-weight: 700;
+    padding: .35rem .875rem; border-radius: 9999px;
+  }
+  .doc-uploaded { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .doc-missing { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+  .btn-upload {
+    padding: .45rem .875rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); color: hsl(var(--primary));
+    font-size: .8125rem; font-weight: 600; cursor: pointer; transition: var(--transition-smooth);
+  }
+  .btn-upload:hover { background: hsl(var(--bg)); }
+  .loading { text-align: center; padding: 3rem; color: hsl(var(--muted)); }
+  .error-banner {
+    background: hsl(0 84% 60% / .1);
+    border: 1px solid hsl(0 84% 60% / .3);
+    color: hsl(0 84% 60%);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+  }
+  .empty-state { text-align: center; padding: 2rem; color: hsl(var(--muted)); font-size: .9375rem; }
+  .trust-bar {
+    margin-top: 3rem; padding: 1.25rem;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center; gap: .75rem;
+    color: hsl(var(--muted)); font-size: .875rem;
+  }
+  .trust-bar svg { width: 18px; height: 18px; opacity: .7; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="logo">izziloan</a>
+    <div class="nav-links">
+      <a href="/#services">Services</a>
+      <a href="/#apply">Apply</a>
+      <a href="/profile">Track</a>
+    </div>
+  </div>
+</nav>
+
+<div class="profile-header">
+  <h1>My Application</h1>
+  <div class="app-number" id="appNumber">Loading…</div>
+  <div class="subtitle">Track your loan application status and manage your documents</div>
+</div>
+
+<div class="container">
+  <a href="/profile" class="btn-back">← Back to Lookup</a>
+  <div id="profileContent">
+    <div class="loading">Loading your application details…</div>
+  </div>
+</div>
+
+<script>
+  const appId = {{ app_id }};
+
+  async function loadProfile() {
+    try {
+      const res = await fetch(`/api/profile/${appId}`);
+      if (!res.ok) {
+        document.getElementById('profileContent').innerHTML = `
+          <div class="error-banner">
+            Application not found. Please check the link or <a href="/profile">look up your application</a>.
+          </div>`;
+        return;
+      }
+      const data = await res.json();
+      renderProfile(data);
+    } catch (e) {
+      document.getElementById('profileContent').innerHTML = `
+        <div class="error-banner">Failed to load profile. Please try again later.</div>`;
+    }
+  }
+
+  function statusClass(status) { return 'pill-' + status; }
+
+  function statusLabel(status) {
+    const map = { pending: 'Pending', under_review: 'Under Review', approved: 'Approved', declined: 'Declined', withdrawn: 'Withdrawn' };
+    return map[status] || status;
+  }
+
+  function renderProfile(data) {
+    document.getElementById('appNumber').textContent = data.application_number;
+
+    const debitOrdersHtml = data.debit_orders && data.debit_orders.length > 0
+      ? data.debit_orders.map(d => `
+          <div class="doc-item">
+            <span class="doc-name">${d.card_brand ? d.card_brand.toUpperCase() : 'Card'} ****${d.card_last_four}</span>
+            <span class="doc-status ${d.is_active ? 'doc-uploaded' : 'doc-missing'}">${d.is_active ? 'Active' : 'Inactive'}</span>
+          </div>
+        `).join('')
+      : '<div class="empty-state">No debit order registered yet. <a href="/static/debit-order-form.html?application_id=' + appId + '">Register now</a></div>';
+
+    document.getElementById('profileContent').innerHTML = `
+      <!-- Status Overview -->
+      <div class="section">
+        <div class="section-title">Application Status</div>
+        <div class="status-grid">
+          <div class="status-cell">
+            <div class="status-label">Current Status</div>
+            <div class="status-value"><span class="pill ${statusClass(data.status)}">${statusLabel(data.status)}</span></div>
+          </div>
+          <div class="status-cell">
+            <div class="status-label">Submitted</div>
+            <div class="status-value">${new Date(data.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+          ${data.reviewed_at ? `
+          <div class="status-cell">
+            <div class="status-label">Last Updated</div>
+            <div class="status-value">${new Date(data.reviewed_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+          ` : ''}
+          ${data.affordability_score ? `
+          <div class="status-cell">
+            <div class="status-label">Affordability Score</div>
+            <div class="status-value accent">R${data.affordability_score.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</div>
+          </div>
+          ` : ''}
+        </div>
+        ${data.admin_notes ? `
+        <div class="card" style="margin-top:1rem;">
+          <div class="section-title">Admin Notes</div>
+          <div style="font-size:.9375rem; line-height:1.6;">${data.admin_notes}</div>
+        </div>
+        ` : ''}
+      </div>
+
+      <!-- Personal Information -->
+      <div class="section">
+        <div class="section-title">Personal Information</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Full Name</span><span class="detail-value">${data.full_name}</span></div>
+            <div class="detail-row"><span class="detail-label">ID Number</span><span class="detail-value mono">${data.id_number || 'N/A'}</span></div>
+            <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value mono">${data.phone}</span></div>
+            <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${data.email}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Information -->
+      <div class="section">
+        <div class="section-title">Financial Information</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Employment</span><span class="detail-value">${data.employment_status || 'N/A'}</span></div>
+            <div class="detail-row"><span class="detail-label">Monthly Income</span><span class="detail-value highlight">R${data.gross_income.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            <div class="detail-row"><span class="detail-label">Monthly Expenses</span><span class="detail-value">R${data.monthly_expenses.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            <div class="detail-row"><span class="detail-label">Existing Debt</span><span class="detail-value">R${data.existing_debt.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ${data.affordability_score ? `
+            <div class="detail-row"><span class="detail-label">Affordability Score</span><span class="detail-value highlight">R${data.affordability_score.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+
+      <!-- Loan Details -->
+      <div class="section">
+        <div class="section-title">Loan Details</div>
+        <div class="card">
+          <div class="detail-grid">
+            <div class="detail-row"><span class="detail-label">Loan Type</span><span class="detail-value">${data.service_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span></div>
+            ${data.requested_amount ? `
+            <div class="detail-row"><span class="detail-label">Requested Amount</span><span class="detail-value highlight">R${data.requested_amount.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}</span></div>
+            ` : ''}
+            <div class="detail-row"><span class="detail-label">Bank</span><span class="detail-value">${data.bank_name || 'N/A'}</span></div>
+            <div class="detail-row"><span class="detail-label">Account Number</span><span class="detail-value mono">${data.account_number || 'N/A'}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="section">
+        <div class="section-title">Documents</div>
+        <div class="card">
+          <div class="doc-item" style="border-bottom: none; padding-bottom: 0;">
+            <span class="doc-name">3 Months Bank Statements</span>
+            <span class="doc-status ${data.has_bank_statements ? 'doc-uploaded' : 'doc-missing'}">${data.has_bank_statements ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('bank_statement_1')">Re-upload</button>
+          </div>
+          <div class="doc-item" style="border-bottom: none; padding-top: 0;">
+            <span class="doc-name">3 Months Payslips</span>
+            <span class="doc-status ${data.has_payslips ? 'doc-uploaded' : 'doc-missing'}">${data.has_payslips ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('payslip_1')">Re-upload</button>
+          </div>
+          <div class="doc-item" style="border-bottom: none; padding-top: 0;">
+            <span class="doc-name">ID Document</span>
+            <span class="doc-status ${data.has_id_front && data.has_id_back ? 'doc-uploaded' : 'doc-missing'}">${data.has_id_front && data.has_id_back ? 'Uploaded' : 'Missing'}</span>
+            <button class="btn-upload" onclick="resubmitDocument('id_front')">Re-upload</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Debit Orders -->
+      <div class="section">
+        <div class="section-title">Debit Order</div>
+        <div class="card">
+          ${debitOrdersHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  async function resubmitDocument(docType) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,image/*';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Uploading…';
+        btn.disabled = true;
+        try {
+          const res = await fetch(`/api/profile/${appId}/documents`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ document_type: docType, file_data: reader.result })
+          });
+          if (res.ok) {
+            btn.textContent = '✓ Uploaded';
+            setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+          } else {
+            btn.textContent = 'Error';
+            btn.disabled = false;
+          }
+        } catch (err) {
+          btn.textContent = 'Error';
+          btn.disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  loadProfile();
+</script>
+
+<div class="trust-bar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+  <span>Your information is protected with bank-level security</span>
+</div>
+
+</body>
+</html>

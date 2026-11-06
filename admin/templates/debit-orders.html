@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Debit Orders — izziloan{% endblock %}
+{% block page_title %}Debit Order Registrations{% endblock %}
+
+{% block content %}
+<div class="table-wrap">
+  <div class="table-header"><h3>All Debit Orders</h3></div>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>ID</th><th>Application</th><th>Cardholder</th><th>Card</th><th>Expiry</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>#{{ o.id }}</td>
+          <td><strong>App #{{ o.application_id }}</strong></td>
+          <td>{{ o.cardholder_name }}</td>
+          <td>
+            <span style="font-weight:600;text-transform:uppercase;">{{ o.card_brand or 'unknown' }}</span>
+            <span style="font-size:.8125rem;color:hsl(var(--muted));">****{{ o.card_last_four }}</span>
+          </td>
+          <td>{{ "%02d/%02d"|format(o.expiry_month, o.expiry_year) }}</td>
+          <td>
+            {% if o.is_active %}
+              <span class="badge badge-approved">Active</span>
+            {% else %}
+              <span class="badge badge-declined">Inactive</span>
+            {% endif %}
+          </td>
+          <td style="font-size:.8125rem;color:hsl(var(--muted))">{{ o.created_at.strftime('%d %b %Y %H:%M') }}</td>
+          <td><a href="/admin/debit-orders/{{ o.id }}" class="btn btn-primary btn-sm">Review</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:hsl(var(--muted));padding:2rem;">No debit orders yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

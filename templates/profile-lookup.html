@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Application — izziloan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: 220 65% 33%;
+    --primary-light: 220 55% 45%;
+    --accent: 45 62% 53%;
+    --bg: 220 20% 96%;
+    --fg: 220 65% 15%;
+    --muted: 220 20% 45%;
+    --border: 220 20% 88%;
+    --card: 0 0% 100%;
+    --radius: 0.75rem;
+    --shadow-card: 0 1px 2px hsl(220 20% 20% / .04), 0 6px 16px hsl(220 20% 20% / .06);
+    --transition-smooth: all .2s ease;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: hsl(var(--bg)); color: hsl(var(--fg)); min-height: 100vh; }
+
+  /* Navbar */
+  .navbar {
+    position: sticky; top: 0; z-index: 50;
+    background: hsl(0 0% 100% / .85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .navbar-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; height: 4.5rem;
+  }
+  .logo { font-size: 1.25rem; font-weight: 700; color: hsl(var(--primary)); text-decoration: none; letter-spacing: -.01em; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: hsl(var(--muted)); text-decoration: none; font-size: .9375rem; font-weight: 500; transition: var(--transition-smooth); }
+  .nav-links a:hover { color: hsl(var(--primary)); }
+
+  /* Hero */
+  .profile-hero {
+    background: linear-gradient(180deg, hsl(220 65% 33%), hsl(220 75% 25%));
+    color: #fff;
+    padding: 5rem 1.5rem 4rem;
+    text-align: center;
+  }
+  .profile-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: .75rem;
+    letter-spacing: -.02em;
+  }
+  .profile-hero p {
+    opacity: .9;
+    font-size: 1.0625rem;
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+
+  /* Lookup */
+  .lookup-wrap {
+    max-width: 28rem;
+    margin: -2.5rem auto 0;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 2;
+  }
+  .lookup-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-card);
+  }
+  .lookup-card h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block;
+    font-size: .875rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    color: hsl(var(--fg));
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: .75rem 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background: hsl(var(--card));
+    color: hsl(var(--fg));
+    transition: var(--transition-smooth);
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / .15);
+  }
+  .form-hint { font-size: .8125rem; color: hsl(var(--muted)); margin-top: .5rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    padding: .75rem 1.5rem; border: none; border-radius: var(--radius);
+    font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-smooth);
+    text-decoration: none;
+  }
+  .btn-primary { background: hsl(var(--primary)); color: #fff; width: 100%; }
+  .btn-primary:hover { background: hsl(var(--primary-light)); }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: .35rem;
+    color: hsl(var(--primary)); font-weight: 600; font-size: .9375rem;
+    text-decoration: none; margin-bottom: 1.5rem;
+  }
+  .btn-back:hover { color: hsl(var(--primary-light)); }
+  .error-msg {
+    background: hsl(0 84% 60% / .1);
+    border: 1px solid hsl(0 84% 60% / .3);
+    color: hsl(0 84% 60%);
+    padding: .875rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    font-size: .9375rem;
+  }
+
+  /* Profile */
+  .container { max-width: 56rem; margin: 0 auto; padding: 0 1rem; }
+  .section { margin-top: 2rem; }
+  .section-title {
+    font-size: .8125rem; font-weight: 700; color: hsl(var(--muted));
+    text-transform: uppercase; letter-spacing: .06em;
+    margin-bottom: 1rem; padding-bottom: .5rem;
+    border-bottom: 2px solid hsl(var(--border));
+  }
+  .card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-card);
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: 1.25rem;
+  }
+  .detail-row {
+    display: flex; justify-content: space-between;
+    padding: .6rem 0; border-bottom: 1px solid hsl(var(--border));
+    font-size: .9375rem; gap: 1rem;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: hsl(var(--muted)); font-weight: 500; flex-shrink: 0; }
+  .detail-value { font-weight: 600; color: hsl(var(--fg)); text-align: right; word-break: break-word; }
+  .detail-value.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .02em; }
+  .detail-value.highlight { color: hsl(var(--accent)); font-size: 1.0625rem; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem; border-radius: 9999px;
+    font-size: .875rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .status-pending { background: hsl(45 62% 53% / .15); color: hsl(35 80% 25%); }
+  .status-under_review { background: hsl(220 65% 33% / .12); color: hsl(220 65% 33%); }
+  .status-approved { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .status-declined { background: hsl(0 84% 60% / .12); color: hsl(0 84% 60%); }
+  .status-withdrawn { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+  .doc-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .75rem 0; border-bottom: 1px solid hsl(var(--border)); gap: 1rem;
+  }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-name { font-weight: 500; flex: 1; }
+  .doc-status {
+    font-size: .8125rem; font-weight: 600;
+    padding: .25rem .75rem; border-radius: 9999px;
+  }
+  .doc-uploaded { background: hsl(142 72% 42% / .12); color: hsl(142 72% 42%); }
+  .doc-missing { background: hsl(var(--muted)); color: hsl(var(--fg)); }
+  .btn-upload {
+    padding: .4rem .875rem; border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); color: hsl(var(--primary));
+    font-size: .8125rem; font-weight: 600; cursor: pointer; transition: var(--transition-smooth);
+  }
+  .btn-upload:hover { background: hsl(var(--border)); }
+  .loading { text-align: center; padding: 3rem; color: hsl(var(--muted)); }
+  .error-banner {
+    background: hsl(0 84% 60% / .1);
+    border: 1px solid hsl(0 84% 60% / .3);
+    color: hsl(0 84% 60%);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+  }
+  .empty-state { text-align: center; padding: 2rem; color: hsl(var(--muted)); font-size: .9375rem; }
+  a { color: hsl(var(--primary)); }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="logo">izziloan</a>
+    <div class="nav-links">
+      <a href="/#services">Services</a>
+      <a href="/#apply">Apply</a>
+      <a href="/profile">Track</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Lookup Hero -->
+<div class="profile-hero">
+  <h1>Track Your Application</h1>
+  <p>Enter your email and ID number to view your application status and manage your documents.</p>
+</div>
+
+<div class="lookup-wrap">
+  <div class="lookup-card">
+    <h2>Find Your Application</h2>
+    <div id="lookupError"></div>
+    <form id="lookupForm">
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="id_number">ID Number *</label>
+        <input type="text" id="id_number" required placeholder="9001015009087">
+        <div class="form-hint">Enter the ID number you used on your application.</div>
+      </div>
+      <button type="submit" class="btn btn-primary">Track Application</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('lookupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const idNumber = document.getElementById('id_number').value.trim();
+    const errorDiv = document.getElementById('lookupError');
+
+    try {
+      const res = await fetch('/api/profile/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, id_number: idNumber })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        errorDiv.innerHTML = `<div class="error-msg">${err.detail}</div>`;
+        return;
+      }
+
+      const data = await res.json();
+      window.location.href = `/profile/${data.id}`;
+    } catch (err) {
+      errorDiv.innerHTML = `<div class="error-msg">Something went wrong. Please try again.</div>`;
+    }
+  });
+</script>
+
+</body>
+</html>
